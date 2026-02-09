@@ -1,0 +1,79 @@
+@import "tailwindcss";
+
+@theme inline {
+  /* Color Palette */
+  --color-primary: #1A1A1A;
+  --color-secondary: #242424;
+  --color-warm: #2A2218;
+  --color-copper: #C4803D;
+  --color-copper-light: #D4956A;
+  --color-clay: #8B6F5E;
+  --color-cream: #F5F0EB;
+  --color-cream-muted: #C8BFB6;
+  --color-off-white: #FAFAF8;
+
+  /* Fonts */
+  --font-serif: var(--font-cormorant);
+  --font-sans: var(--font-inter);
+
+  /* Font sizes — larger scale */
+  --font-size-display: 7rem;
+  --font-size-display--line-height: 1;
+  --font-size-display--letter-spacing: -0.02em;
+
+  --font-size-h1: 4.5rem;
+  --font-size-h1--line-height: 1.05;
+  --font-size-h1--letter-spacing: -0.01em;
+
+  --font-size-h2: 3.25rem;
+  --font-size-h2--line-height: 1.1;
+  --font-size-h2--letter-spacing: -0.005em;
+
+  --font-size-h3: 2.25rem;
+  --font-size-h3--line-height: 1.2;
+
+  --font-size-h4: 1.5rem;
+  --font-size-h4--line-height: 1.3;
+
+  --font-size-body-lg: 1.375rem;
+  --font-size-body-lg--line-height: 1.75;
+
+  --font-size-body: 1.125rem;
+  --font-size-body--line-height: 1.7;
+
+  --font-size-caption: 1rem;
+  --font-size-caption--line-height: 1.5;
+
+  --font-size-overline: 0.875rem;
+  --font-size-overline--line-height: 1.5;
+  --font-size-overline--letter-spacing: 0.15em;
+}
+
+body {
+  background-color: var(--color-primary);
+  color: var(--color-cream);
+  font-family: var(--font-serif);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+::selection {
+  background-color: var(--color-copper);
+  color: var(--color-primary);
+}
+
+/* Smooth scroll */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Overline utility */
+.overline {
+  font-family: var(--font-serif);
+  font-size: var(--font-size-overline);
+  line-height: var(--font-size-overline--line-height);
+  letter-spacing: var(--font-size-overline--letter-spacing);
+  text-transform: uppercase;
+  font-weight: 500;
+  color: var(--color-copper);
+}

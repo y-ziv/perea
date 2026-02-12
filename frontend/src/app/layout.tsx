@@ -25,6 +25,10 @@ export const metadata: Metadata = {
     title: `${siteConfig.nameHe} — ${siteConfig.tagline}`,
     description: siteConfig.description,
   },
+  icons: {
+    icon: "/favicon.ico",
+    apple: "/apple-touch-icon.png",
+  },
   robots: {
     index: true,
     follow: true,

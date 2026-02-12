@@ -6,7 +6,7 @@ import { Divider } from "@/components/ui/Divider";
 
 export function Footer() {
   return (
-    <footer className="bg-primary">
+    <footer className="bg-secondary">
       <Divider className="mb-0" />
       <div className="mx-auto max-w-7xl px-6 py-20">
         <div className="grid gap-12 sm:grid-cols-3">

@@ -121,9 +121,8 @@ export function Hero() {
         </motion.div>
       </AnimatePresence>
 
-      {/* Dark overlay */}
-      <div className="pointer-events-none absolute inset-0 bg-black/30" />
-      <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-primary/60" />
+      {/* Warm overlay — gentle gradient at bottom only */}
+      <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-primary/80" />
 
       {/* Logo */}
       <div className="relative z-10 flex flex-col items-center px-6 text-center">

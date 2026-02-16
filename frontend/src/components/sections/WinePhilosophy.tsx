@@ -25,7 +25,7 @@ export function WinePhilosophy() {
               className="object-cover"
             />
           </div>
-          <h3 className="font-serif text-h3 font-normal text-cream">
+          <h3 className="font-sans text-h3 font-semibold text-cream-muted">
             הגליל
           </h3>
           <p className="mt-4 max-w-2xl text-body-lg font-light leading-relaxed text-cream-muted">
@@ -47,7 +47,7 @@ export function WinePhilosophy() {
               className="object-cover"
             />
           </div>
-          <h3 className="font-serif text-h3 font-normal text-cream">
+          <h3 className="font-sans text-h3 font-semibold text-cream-muted">
             צפון יוון
           </h3>
           <p className="mt-4 max-w-2xl text-body-lg font-light leading-relaxed text-cream-muted">

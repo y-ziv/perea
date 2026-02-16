@@ -34,7 +34,7 @@ export default function ExperiencePage() {
       </div>
 
       <div className="mx-auto max-w-3xl px-6 py-20">
-        <h2 className="font-serif text-h2 font-normal text-cream">
+        <h2 className="font-sans text-h2 font-normal text-cream">
           חנות יין וטעימות
         </h2>
         <div className="mt-6 space-y-6 text-body-lg font-light leading-relaxed text-cream-muted">
@@ -64,7 +64,7 @@ export default function ExperiencePage() {
       </div>
 
       <div className="mx-auto max-w-3xl px-6 py-20">
-        <h2 className="font-serif text-h2 font-normal text-cream">
+        <h2 className="font-sans text-h2 font-normal text-cream">
           ביסטרו יין
         </h2>
         <div className="mt-6 space-y-6 text-body-lg font-light leading-relaxed text-cream-muted">
@@ -84,7 +84,7 @@ export default function ExperiencePage() {
 
       {/* Events */}
       <div className="mx-auto max-w-3xl px-6 py-20">
-        <h2 className="font-serif text-h2 font-normal text-cream">
+        <h2 className="font-sans text-h2 font-normal text-cream">
           אירועים וטעימות
         </h2>
         <div className="mt-6 space-y-6 text-body-lg font-light leading-relaxed text-cream-muted">

@@ -67,7 +67,7 @@ export default function RootLayout({
         />
       </head>
       <body
-        className={`${cormorant.variable} ${inter.variable} font-serif antialiased`}
+        className={`${cormorant.variable} ${inter.variable} font-sans antialiased`}
       >
         <Navigation />
         <main>{children}</main>

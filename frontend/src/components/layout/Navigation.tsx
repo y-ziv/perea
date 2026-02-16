@@ -105,7 +105,7 @@ export function Navigation() {
                     <Link
                       href={item.href}
                       onClick={() => setMobileOpen(false)}
-                      className="font-serif text-h2 font-light text-cream"
+                      className="font-sans text-h2 font-light text-cream"
                     >
                       {item.label}
                     </Link>

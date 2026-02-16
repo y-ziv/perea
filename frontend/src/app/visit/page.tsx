@@ -23,7 +23,7 @@ export default function VisitPage() {
         {/* Hours */}
         <div className="grid gap-10 sm:grid-cols-2">
           <div className="rounded-sm bg-secondary p-8">
-            <h3 className="font-serif text-h3 font-normal text-cream">
+            <h3 className="font-sans text-h3 font-normal text-cream">
               {siteConfig.hours.daytime.label}
             </h3>
             <p className="mt-3 text-body-lg text-cream-muted">
@@ -35,7 +35,7 @@ export default function VisitPage() {
           </div>
 
           <div className="rounded-sm bg-secondary p-8">
-            <h3 className="font-serif text-h3 font-normal text-cream">
+            <h3 className="font-sans text-h3 font-normal text-cream">
               {siteConfig.hours.evening.label}
             </h3>
             <p className="mt-3 text-body-lg text-cream-muted">
@@ -51,7 +51,7 @@ export default function VisitPage() {
 
         {/* Location */}
         <div className="text-center">
-          <h3 className="font-serif text-h3 font-normal text-cream">
+          <h3 className="font-sans text-h3 font-normal text-cream">
             איך מגיעים
           </h3>
           <p className="mt-4 text-body-lg text-cream-muted">
@@ -89,7 +89,7 @@ export default function VisitPage() {
 
         {/* Contact */}
         <div className="text-center">
-          <h3 className="font-serif text-h3 font-normal text-cream">
+          <h3 className="font-sans text-h3 font-normal text-cream">
             צרו קשר
           </h3>
           <p className="mt-4 text-body-lg text-cream-muted">

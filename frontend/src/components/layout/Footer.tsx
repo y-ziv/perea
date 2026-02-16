@@ -8,31 +8,56 @@ export function Footer() {
   return (
     <footer className="bg-secondary">
       <Divider className="mb-0" />
-      <div className="mx-auto max-w-7xl px-6 py-20">
-        <div className="grid gap-12 sm:grid-cols-3">
-          {/* Brand */}
-          <div>
-            <Image
-              src="/images/logo-warm.png"
-              alt="פראה בית יין"
-              width={140}
-              height={140}
-              className="mb-4 h-12 w-auto"
-            />
+      <div className="mx-auto max-w-7xl px-6 py-6">
+        <div className="grid grid-cols-3 gap-12">
+          {/* Column 1 — Logo + Contact + Social */}
+          <div className="flex flex-col gap-3">
+            <div className="relative h-8 w-20">
+              <Image
+                src="/images/logo-warm.png"
+                alt="פראה בית יין"
+                fill
+                className="object-contain object-right"
+              />
+            </div>
             <p className="text-caption text-cream-muted">
               {siteConfig.tagline}
             </p>
+            <div className="flex items-center gap-3">
+              <a
+                href={siteConfig.social.instagram}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Instagram"
+                className="text-cream-muted transition-colors duration-300 hover:text-copper"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth={1.5}
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  className="h-5 w-5"
+                >
+                  <rect x="2" y="2" width="20" height="20" rx="5" ry="5" />
+                  <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" />
+                  <line x1="17.5" y1="6.5" x2="17.51" y2="6.5" />
+                </svg>
+              </a>
+            </div>
           </div>
 
-          {/* Links */}
-          <div>
-            <p className="overline mb-4">גלו</p>
-            <ul className="space-y-2">
+          {/* Column 2 — Navigation */}
+          <div className="flex flex-col gap-2">
+            <p className="text-caption font-medium text-cream-muted">ניווט</p>
+            <ul className="space-y-1">
               {navigation.map((item) => (
                 <li key={item.href}>
                   <Link
                     href={item.href}
-                    className="text-caption text-cream-muted transition-colors duration-300 hover:text-cream"
+                    className="text-caption text-cream-muted/80 transition-colors duration-300 hover:text-cream"
                   >
                     {item.label}
                   </Link>
@@ -41,24 +66,34 @@ export function Footer() {
             </ul>
           </div>
 
-          {/* Contact */}
-          <div>
-            <p className="overline mb-4">בקרו</p>
-            <div className="space-y-3 text-caption text-cream-muted">
-              <p>{siteConfig.location.address}</p>
+          {/* Column 3 — Hours + Location */}
+          <div className="flex flex-col gap-2">
+            <p className="text-caption font-medium text-cream-muted">שעות פתיחה</p>
+            <div className="space-y-1.5 text-caption text-cream-muted/80">
               <div>
-                <p className="text-cream">{siteConfig.hours.daytime.label}</p>
+                <p className="text-cream-muted">{siteConfig.hours.daytime.label}</p>
                 <p>{siteConfig.hours.daytime.hours}</p>
               </div>
               <div>
-                <p className="text-cream">{siteConfig.hours.evening.label}</p>
+                <p className="text-cream-muted">{siteConfig.hours.evening.label}</p>
                 <p>{siteConfig.hours.evening.hours}</p>
               </div>
+            </div>
+            <div className="mt-1">
+              <p className="text-caption font-medium text-cream-muted">מיקום</p>
+              <a
+                href={siteConfig.location.googleMapsUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-caption text-cream-muted/80 transition-colors duration-300 hover:text-copper"
+              >
+                {siteConfig.location.address}
+              </a>
             </div>
           </div>
         </div>
 
-        <div className="mt-16 border-t border-cream-muted/10 pt-8 text-center">
+        <div className="mt-6 border-t border-cream-muted/10 pt-3 text-center">
           <p className="text-overline text-cream-muted/60">
             &copy; {new Date().getFullYear()} {siteConfig.nameHe}. כל הזכויות שמורות.
           </p>

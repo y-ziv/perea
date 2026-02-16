@@ -26,7 +26,7 @@ export function Experience() {
                 className="object-cover"
               />
             </div>
-            <h3 className="font-serif text-h3 font-normal text-cream">
+            <h3 className="font-sans text-h3 font-semibold text-cream-muted">
               חנות יין וטעימות
             </h3>
             <p className="mt-4 text-body font-light leading-relaxed text-cream-muted">
@@ -45,7 +45,7 @@ export function Experience() {
                 className="object-cover"
               />
             </div>
-            <h3 className="font-serif text-h3 font-normal text-cream">
+            <h3 className="font-sans text-h3 font-semibold text-cream-muted">
               ביסטרו יין
             </h3>
             <p className="mt-4 text-body font-light leading-relaxed text-cream-muted">

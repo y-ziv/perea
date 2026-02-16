@@ -35,7 +35,7 @@ export default function WinePage() {
               <p className="overline mb-1">
                 {wine.country === "Greece" ? "יוון" : "ישראל"} · {wine.grape}
               </p>
-              <h3 className="font-serif text-h4 font-medium text-cream">
+              <h3 className="font-sans text-h4 font-medium text-cream">
                 {wine.name}
               </h3>
               <p className="mt-1 text-caption text-cream-muted">

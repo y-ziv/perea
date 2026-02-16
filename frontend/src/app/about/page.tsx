@@ -83,7 +83,7 @@ export default function AboutPage() {
             היין ואת יינות יוון והגליל דרך ערבי טעימות מודרכות, אירוח של ייננים
             ושפים ואירועים מסוגים שונים.
           </p>
-          <p className="font-serif text-h3 font-normal text-cream">
+          <p className="font-sans text-h3 font-normal text-cream">
             מוזמנים אלינו לרגעים קסומים של טעם ושמחה.
           </p>
         </div>

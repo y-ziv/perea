@@ -3,12 +3,14 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
+import { usePathname } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { navigation } from "@/data/navigation";
 
 export function Navigation() {
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
+  const pathname = usePathname();
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 60);
@@ -31,24 +33,32 @@ export function Navigation() {
     <>
       <header
         className={`fixed top-0 z-50 w-full transition-all duration-500 ${
-          scrolled
-            ? "bg-primary/90 backdrop-blur-md"
-            : "bg-transparent"
+          scrolled ? "bg-primary/90 backdrop-blur-md" : "bg-transparent"
         }`}
       >
-        <nav className="mx-auto flex max-w-7xl items-center justify-between px-6 py-5">
-          {/* Desktop nav — first in DOM so it appears on the right in RTL */}
-          <ul className="hidden items-center gap-10 sm:flex">
-            {navigation.map((item) => (
-              <li key={item.href}>
-                <Link
-                  href={item.href}
-                  className="text-caption font-normal tracking-wide text-cream-muted transition-colors duration-300 hover:text-cream"
-                >
-                  {item.label}
-                </Link>
-              </li>
-            ))}
+        <nav className="relative flex min-h-[6rem] w-full items-center justify-between px-6 py-5">
+          {/* Desktop nav — centered absolutely */}
+          <ul className="absolute left-1/2 top-1/2 hidden -translate-x-1/2 -translate-y-1/2 items-center gap-10 sm:flex">
+            {navigation.map((item) => {
+              const isActive = pathname === item.href;
+              return (
+                <li key={item.href}>
+                  <Link
+                    href={item.href}
+                    className={`group relative text-caption tracking-wide text-clay transition-all duration-300 hover:font-medium ${
+                      isActive ? "font-medium" : "font-normal"
+                    }`}
+                  >
+                    {item.label}
+                    <span
+                      className={`absolute -bottom-1 left-0 h-[2px] w-full bg-clay transition-transform duration-300 ease-out ${
+                        isActive ? "scale-x-100" : "scale-x-0 group-hover:scale-x-100"
+                      }`}
+                    />
+                  </Link>
+                </li>
+              );
+            })}
           </ul>
 
           {/* Mobile toggle */}
@@ -69,8 +79,11 @@ export function Navigation() {
             />
           </button>
 
-          {/* Logo — last in DOM so it appears on the left in RTL; scaled up visually only, nav height unchanged */}
-          <Link href="/" className="relative z-50 flex h-14 shrink-0 items-center justify-center overflow-visible">
+          {/* Logo — aligned to the left manually via absolute positioning on desktop */}
+          <Link
+            href="/"
+            className="relative z-50 flex h-14 shrink-0 items-center justify-center overflow-visible sm:absolute sm:left-6 sm:top-1/2 sm:-translate-y-1/2"
+          >
             <Image
               src="/images/logo-warm.png"
               alt="פראה בית יין"
@@ -105,7 +118,9 @@ export function Navigation() {
                     <Link
                       href={item.href}
                       onClick={() => setMobileOpen(false)}
-                      className="font-sans text-h2 font-light text-cream"
+                      className={`font-sans text-h2 font-light text-cream ${
+                        pathname === item.href ? "font-bold underline" : ""
+                      }`}
                     >
                       {item.label}
                     </Link>

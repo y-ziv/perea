@@ -8,16 +8,16 @@ export function Footer() {
   return (
     <footer className="bg-secondary">
       <Divider className="mb-0" />
-      <div className="mx-auto max-w-7xl px-6 py-6">
-        <div className="grid grid-cols-3 gap-12">
+      <div className="mx-auto max-w-7xl px-6 py-4">
+        <div className="grid grid-cols-1 gap-16 text-center md:grid-cols-3">
           {/* Column 1 — Logo + Contact + Social */}
-          <div className="flex flex-col gap-3">
-            <div className="relative h-8 w-20">
+          <div className="flex flex-col items-center gap-3">
+            <div className="relative h-24 w-60">
               <Image
                 src="/images/logo-warm.png"
                 alt="פראה בית יין"
                 fill
-                className="object-contain object-right"
+                className="object-contain"
               />
             </div>
             <p className="text-caption text-cream-muted">
@@ -50,7 +50,7 @@ export function Footer() {
           </div>
 
           {/* Column 2 — Navigation */}
-          <div className="flex flex-col gap-2">
+          <div className="flex flex-col items-center gap-2">
             <p className="text-caption font-medium text-cream-muted">ניווט</p>
             <ul className="space-y-1">
               {navigation.map((item) => (
@@ -67,7 +67,7 @@ export function Footer() {
           </div>
 
           {/* Column 3 — Hours + Location */}
-          <div className="flex flex-col gap-2">
+          <div className="flex flex-col items-center gap-2">
             <p className="text-caption font-medium text-cream-muted">שעות פתיחה</p>
             <div className="space-y-1.5 text-caption text-cream-muted/80">
               <div>
@@ -93,7 +93,7 @@ export function Footer() {
           </div>
         </div>
 
-        <div className="mt-6 border-t border-cream-muted/10 pt-3 text-center">
+        <div className="mt-4 border-t border-cream-muted/10 pt-3 text-center">
           <p className="text-overline text-cream-muted/60">
             &copy; {new Date().getFullYear()} {siteConfig.nameHe}. כל הזכויות שמורות.
           </p>

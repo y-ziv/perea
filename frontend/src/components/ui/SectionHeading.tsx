@@ -25,7 +25,7 @@ export function SectionHeading({
         </FadeIn>
       )}
       <FadeIn delay={0.1}>
-        <h2 className="font-sans text-h1 font-semibold text-clay">
+        <h2 className="font-serif text-h1 font-semibold text-[var(--color-header)]">
           {heading}
         </h2>
       </FadeIn>

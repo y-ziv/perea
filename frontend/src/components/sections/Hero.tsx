@@ -14,15 +14,11 @@ type PhotoConfig =
   | { src: string; alt: string; type: "static"; at: number; duration: number };
 
 const photos: PhotoConfig[] = [
-  { src: "/images/home-screen-photos/home-1.jpg", alt: "Perea 1", type: "pan", from: 10, to: 50, duration: 20 },
-  { src: "/images/home-screen-photos/home-2.jpg", alt: "Perea 2", type: "rotate-zoom", duration: 10 },
   { src: "/images/home-screen-photos/home-3.jpg", alt: "Perea 3", type: "zoom", duration: 10 },
   { src: "/images/home-screen-photos/home-4.jpg", alt: "Perea 4", type: "zoom", duration: 10 },
-  { src: "/images/home-screen-photos/home-5.jpg", alt: "Perea 5", type: "pan", from: 10, to: 70, duration: 14 },
   { src: "/images/home-screen-photos/home-6.jpg", alt: "Perea 6", type: "pan", from: 20, to: 50, duration: 14 },
   { src: "/images/home-screen-photos/home-7.jpg", alt: "Perea 7", type: "pan", from: 45, to: 100, duration: 14 },
   { src: "/images/home-screen-photos/home-8.jpg", alt: "Perea 8", type: "static", at: 60, duration: 8 },
-  { src: "/images/home-screen-photos/home-9.jpg", alt: "Perea 9", type: "pan", from: 50, to: 100, duration: 14 },
 ];
 
 function SlideImage({ photo }: { photo: PhotoConfig }) {
@@ -106,7 +102,7 @@ export function Hero() {
   }, [advance, current, photo.duration]);
 
   return (
-    <section className="relative flex min-h-screen items-center justify-center overflow-hidden bg-primary">
+    <section className="relative flex min-h-screen items-center justify-center overflow-hidden bg-primary brightness-110">
       {/* Slideshow */}
       <AnimatePresence mode="popLayout">
         <motion.div
@@ -140,6 +136,14 @@ export function Hero() {
             className="h-64 w-auto sm:h-80 md:h-96 lg:h-[28rem] xl:h-[32rem]"
             priority
           />
+          <div className="-mt-24 space-y-2">
+            <h1 className="font-serif text-h1 font-medium text-white drop-shadow-sm md:text-display">
+              פראה – בית יין בגליל
+            </h1>
+            <p className="font-heading-secondary text-h3 font-light tracking-wide text-white drop-shadow-sm md:text-h2">
+              שתי ארצות. כוס אחת.
+            </p>
+          </div>
         </motion.div>
       </div>
     </section>

@@ -10,7 +10,7 @@ export function VisitCTA() {
           {/* Right column — Text content (appears first in RTL) */}
           <div>
             <FadeIn>
-              <p className="font-sans text-h2 font-semibold leading-snug text-cream-muted">
+              <p className="font-serif text-h2 font-semibold leading-snug text-cream-muted">
                 מוזמנים אלינו לרגעים קסומים של טעם ושמחה
               </p>
             </FadeIn>

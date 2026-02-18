@@ -1,6 +1,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { SectionHeading } from "@/components/ui/SectionHeading";
+import { Button } from "@/components/ui/Button";
 
 const IMG = "/drive-download-20260209T114257Z-1-001";
 
@@ -26,7 +27,7 @@ export function Experience() {
                 className="object-cover"
               />
             </div>
-            <h3 className="font-sans text-h3 font-semibold text-cream-muted">
+            <h3 className="font-heading-secondary text-h3 font-semibold text-cream-muted">
               חנות יין וטעימות
             </h3>
             <p className="mt-4 text-body font-light leading-relaxed text-cream-muted">
@@ -45,7 +46,7 @@ export function Experience() {
                 className="object-cover"
               />
             </div>
-            <h3 className="font-sans text-h3 font-semibold text-cream-muted">
+            <h3 className="font-heading-secondary text-h3 font-semibold text-cream-muted">
               ביסטרו יין
             </h3>
             <p className="mt-4 text-body font-light leading-relaxed text-cream-muted">
@@ -56,13 +57,9 @@ export function Experience() {
         </div>
 
         <div className="mt-14 text-center">
-          <Link
-            href="/experience"
-            className="inline-flex items-center gap-2 text-caption font-medium tracking-wide text-copper transition-colors duration-300 hover:text-copper-light"
-          >
-            גלו את החוויה
-            <span aria-hidden="true">&larr;</span>
-          </Link>
+          <Button href="/experience">
+            גלו את החוויה &larr;
+          </Button>
         </div>
       </div>
     </section>

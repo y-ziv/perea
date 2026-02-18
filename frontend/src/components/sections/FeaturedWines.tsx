@@ -5,6 +5,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 import { SectionHeading } from "@/components/ui/SectionHeading";
+import { Button } from "@/components/ui/Button";
 import { wines } from "@/data/wines";
 
 const ITEMS_PER_PAGE = 3;
@@ -132,7 +133,7 @@ export function FeaturedWines() {
                       {wine.country === "Greece" ? "יוון" : "ישראל"} ·{" "}
                       {wine.grape}
                     </p>
-                    <h4 className="font-sans text-h4 font-semibold text-cream-muted">
+                    <h4 className="font-heading-secondary text-h4 font-semibold text-cream-muted">
                       {wine.name}
                     </h4>
                     <p className="mt-1 text-caption text-cream-muted">
@@ -213,13 +214,9 @@ export function FeaturedWines() {
         </div>
 
         <div className="mt-14">
-          <Link
-            href="/wine"
-            className="inline-flex items-center gap-2 text-caption font-medium tracking-wide text-copper transition-colors duration-300 hover:text-copper-light"
-          >
-            לכל היינות
-            <span aria-hidden="true">&larr;</span>
-          </Link>
+          <Button href="/wine">
+            לכל היינות &larr;
+          </Button>
         </div>
       </div>
     </section>

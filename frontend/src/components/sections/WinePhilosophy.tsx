@@ -1,13 +1,12 @@
 import Image from "next/image";
 import { SectionHeading } from "@/components/ui/SectionHeading";
-import { Divider } from "@/components/ui/Divider";
 
 const IMG = "/drive-download-20260209T114257Z-1-001";
 
 export function WinePhilosophy() {
   return (
-    <section className="bg-warm py-32">
-      <div className="mx-auto max-w-5xl px-6">
+    <section className="bg-secondary py-32">
+      <div className="mx-auto max-w-7xl px-6">
         <SectionHeading
           overline="הפילוסופיה שלנו"
           heading="שתי ארצות, כוס אחת"
@@ -16,30 +15,34 @@ export function WinePhilosophy() {
         />
 
         {/* Galilee */}
-        <div className="mb-16">
-          <div className="relative mb-10 h-64 w-full overflow-hidden rounded-sm">
-            <Image
-              src={`${IMG}/0Y1A2282 copy.jpg`}
-              alt="יינות הגליל"
-              fill
-              className="object-cover"
+        <div className="mb-24 flex flex-col gap-12 md:flex-row-reverse md:items-center md:gap-16">
+          <div className="relative h-56 w-full overflow-hidden rounded-sm md:h-[28rem] md:w-3/5">
+            <video
+              src="/videos/13157705-uhd_3840_2160_25fps.mp4"
+              autoPlay
+              muted
+              loop
+              playsInline
+              className="h-full w-full object-cover"
             />
+            {/* Subtle overlay */}
+            <div className="pointer-events-none absolute inset-0 bg-primary/10" />
           </div>
-          <h3 className="font-sans text-h3 font-semibold text-cream-muted">
-            הגליל
-          </h3>
-          <p className="mt-4 max-w-2xl text-body-lg font-light leading-relaxed text-cream-muted">
-            יינות בוטיק של ייננים חברים מהטרואר המצוין של הגליל – ארץ של בזלת
-            וגיר, אוויר הרים קריר וגפנים עתיקות. כל בקבוק נושא את האופי של
-            המקום המיוחד הזה.
-          </p>
+          <div className="md:w-2/5 md:px-8">
+            <h3 className="font-heading-secondary text-h3 font-semibold text-cream-muted">
+              הגליל
+            </h3>
+            <p className="mt-4 text-body-lg font-light leading-relaxed text-cream-muted">
+              יינות בוטיק של ייננים חברים מהטרואר המצוין של הגליל – ארץ של בזלת
+              וגיר, אוויר הרים קריר וגפנים עתיקות. כל בקבוק נושא את האופי של
+              המקום המיוחד הזה.
+            </p>
+          </div>
         </div>
 
-        <Divider className="my-16" />
-
         {/* Northern Greece */}
-        <div>
-          <div className="relative mb-10 h-64 w-full overflow-hidden rounded-sm">
+        <div className="flex flex-col gap-12 md:flex-row md:items-center md:gap-16">
+          <div className="relative h-56 w-full overflow-hidden rounded-sm md:h-[28rem] md:w-3/5">
             <Image
               src={`${IMG}/0Y1A2283 copy.jpg`}
               alt="יינות צפון יוון"
@@ -47,14 +50,16 @@ export function WinePhilosophy() {
               className="object-cover"
             />
           </div>
-          <h3 className="font-sans text-h3 font-semibold text-cream-muted">
-            צפון יוון
-          </h3>
-          <p className="mt-4 max-w-2xl text-body-lg font-light leading-relaxed text-cream-muted">
-            יינות יוונים איכותיים מיקבי בוטיק בצפון יוון שאנו מייבאים בעצמנו –
-            שם חום ים תיכוני פוגש גובה הררי, ומייצר יינות בעומק ואלגנטיות
-            מפתיעים שרוב הישראלים עדיין לא טעמו.
-          </p>
+          <div className="md:w-2/5 md:px-8">
+            <h3 className="font-heading-secondary text-h3 font-semibold text-cream-muted">
+              צפון יוון
+            </h3>
+            <p className="mt-4 text-body-lg font-light leading-relaxed text-cream-muted">
+              יינות יוונים איכותיים מיקבי בוטיק בצפון יוון שאנו מייבאים בעצמנו –
+              שם חום ים תיכוני פוגש גובה הררי, ומייצר יינות בעומק ואלגנטיות
+              מפתיעים שרוב הישראלים עדיין לא טעמו.
+            </p>
+          </div>
         </div>
       </div>
     </section>

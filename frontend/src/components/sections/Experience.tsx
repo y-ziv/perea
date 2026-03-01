@@ -41,7 +41,7 @@ export function Experience() {
                 src="/images/perea night.jpg"
                 alt="ביסטרו יין"
                 fill
-                className="object-cover"
+                className="object-cover object-[center_60%]"
               />
             </div>
             <h3 className="font-heading-secondary text-h3 font-semibold text-cream-muted">

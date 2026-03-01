@@ -213,9 +213,9 @@ export function FeaturedWines() {
           </div>
         </div>
 
-        <div className="mt-14">
+        <div className="mt-14 text-center">
           <Button href="/wine">
-            לכל היינות &larr;
+            לכל היינות
           </Button>
         </div>
       </div>

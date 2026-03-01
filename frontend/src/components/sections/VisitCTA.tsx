@@ -27,7 +27,7 @@ export function VisitCTA() {
 
             <div className="mt-8">
               <FadeIn delay={0.2}>
-                <Button href="/visit">תכננו את הביקור &larr;</Button>
+                <Button href="/visit">לתיאום ביקור</Button>
               </FadeIn>
             </div>
           </div>

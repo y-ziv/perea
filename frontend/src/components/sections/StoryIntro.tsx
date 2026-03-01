@@ -34,7 +34,7 @@ export function StoryIntro() {
                 href="/about"
                 className="inline-flex items-center gap-2 text-caption font-medium tracking-wide text-copper transition-colors duration-300 hover:text-copper-light"
               >
-                קראו את הסיפור המלא
+                  לסיפור המלא שלנו
                 <span aria-hidden="true">&larr;</span>
               </Link>
             </div>

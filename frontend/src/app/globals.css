@@ -73,6 +73,15 @@ html {
   scroll-behavior: smooth;
 }
 
+/* Hide scrollbar for horizontal scroll areas */
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
 /* Overline utility */
 .overline {
   font-family: var(--font-sans);

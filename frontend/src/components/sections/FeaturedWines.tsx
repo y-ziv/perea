@@ -1,27 +1,45 @@
 "use client";
 
-import { useState, useCallback, useRef } from "react";
-import Link from "next/link";
+import { useState, useCallback, useEffect } from "react";
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { Button } from "@/components/ui/Button";
 import { wines } from "@/data/wines";
 
-const ITEMS_PER_PAGE = 3;
+function useItemsPerPage() {
+  const [items, setItems] = useState(3);
+  useEffect(() => {
+    const update = () => {
+      if (window.innerWidth >= 1024) setItems(3);
+      else if (window.innerWidth >= 640) setItems(2);
+      else setItems(1);
+    };
+    update();
+    window.addEventListener("resize", update);
+    return () => window.removeEventListener("resize", update);
+  }, []);
+  return items;
+}
 
 export function FeaturedWines() {
+  const itemsPerPage = useItemsPerPage();
   const [page, setPage] = useState(0);
   const [direction, setDirection] = useState(0); // -1 = prev, 1 = next
-  const totalPages = Math.ceil(wines.length / ITEMS_PER_PAGE);
+  const totalPages = Math.ceil(wines.length / itemsPerPage);
+
+  // Reset page when items per page changes to avoid blank pages
+  useEffect(() => {
+    setPage(0);
+  }, [itemsPerPage]);
 
   // Infinite wrap-around
   const getWrappedPage = (p: number) => ((p % totalPages) + totalPages) % totalPages;
 
   const visibleWines = (() => {
     const idx = getWrappedPage(page);
-    const start = idx * ITEMS_PER_PAGE;
-    return wines.slice(start, start + ITEMS_PER_PAGE);
+    const start = idx * itemsPerPage;
+    return wines.slice(start, start + itemsPerPage);
   })();
 
   const paginate = useCallback(
@@ -49,12 +67,12 @@ export function FeaturedWines() {
   };
 
   return (
-    <section className="bg-secondary py-32">
-      <div className="mx-auto max-w-6xl px-6">
+    <section className="bg-secondary py-20 sm:py-32">
+      <div className="mx-auto max-w-6xl px-4 sm:px-6">
         <SectionHeading
           overline="יינות נבחרים"
           heading="מהאוסף שלנו"
-          className="mb-16"
+          className="mb-10 sm:mb-16"
         />
 
         {/* Carousel wrapper */}
@@ -107,7 +125,7 @@ export function FeaturedWines() {
           <div className="overflow-hidden">
             <AnimatePresence initial={false} custom={direction} mode="wait">
               <motion.div
-                key={getWrappedPage(page)}
+                key={`${itemsPerPage}-${getWrappedPage(page)}`}
                 custom={direction}
                 variants={variants}
                 initial="enter"
@@ -121,7 +139,7 @@ export function FeaturedWines() {
               >
                 {visibleWines.map((wine) => (
                   <div key={wine.id} className="group">
-                    <div className="relative mb-4 h-48 overflow-hidden rounded-sm bg-warm/30">
+                    <div className="relative mb-3 h-56 overflow-hidden rounded-sm bg-warm/30 sm:mb-4 sm:h-48">
                       <Image
                         src={wine.image}
                         alt={wine.name}
@@ -133,13 +151,13 @@ export function FeaturedWines() {
                       {wine.country === "Greece" ? "יוון" : "ישראל"} ·{" "}
                       {wine.grape}
                     </p>
-                    <h4 className="font-heading-secondary text-h4 font-semibold text-cream-muted">
+                    <h4 className="font-heading-secondary text-body-lg font-semibold text-cream-muted sm:text-h4">
                       {wine.name}
                     </h4>
                     <p className="mt-1 text-caption text-cream-muted">
                       {wine.winery} {wine.year && `· ${wine.year}`}
                     </p>
-                    <p className="mt-2 text-body-sm font-light leading-relaxed text-cream-muted">
+                    <p className="mt-2 text-body font-light leading-relaxed text-cream-muted sm:text-body-sm">
                       {wine.description}
                     </p>
                   </div>
@@ -148,11 +166,12 @@ export function FeaturedWines() {
             </AnimatePresence>
           </div>
 
-          {/* Mobile arrows + dots */}
+          {/* Mobile arrows + dots — RTL: right arrow (>) = prev, left arrow (<) = next */}
           <div className="mt-8 flex items-center justify-center gap-4 lg:hidden">
+            {/* Right arrow — goes to previous (RTL: right = back) */}
             <button
-              onClick={() => paginate(1)}
-              aria-label="הבא"
+              onClick={() => paginate(-1)}
+              aria-label="הקודם"
               className="flex items-center justify-center rounded-full border border-copper/30 bg-primary/80 p-3 text-copper transition-all duration-300 hover:border-copper hover:bg-primary"
             >
               <svg
@@ -166,7 +185,7 @@ export function FeaturedWines() {
                 <path
                   strokeLinecap="round"
                   strokeLinejoin="round"
-                  d="M15.75 19.5L8.25 12l7.5-7.5"
+                  d="M8.25 4.5l7.5 7.5-7.5 7.5"
                 />
               </svg>
             </button>
@@ -190,9 +209,10 @@ export function FeaturedWines() {
               ))}
             </div>
 
+            {/* Left arrow — goes to next (RTL: left = forward) */}
             <button
-              onClick={() => paginate(-1)}
-              aria-label="הקודם"
+              onClick={() => paginate(1)}
+              aria-label="הבא"
               className="flex items-center justify-center rounded-full border border-copper/30 bg-primary/80 p-3 text-copper transition-all duration-300 hover:border-copper hover:bg-primary"
             >
               <svg
@@ -206,14 +226,14 @@ export function FeaturedWines() {
                 <path
                   strokeLinecap="round"
                   strokeLinejoin="round"
-                  d="M8.25 4.5l7.5 7.5-7.5 7.5"
+                  d="M15.75 19.5L8.25 12l7.5-7.5"
                 />
               </svg>
             </button>
           </div>
         </div>
 
-        <div className="mt-14 text-center">
+        <div className="mt-10 text-center sm:mt-14">
           <Button href="/wine">
             לכל היינות
           </Button>

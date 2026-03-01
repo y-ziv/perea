@@ -3,8 +3,6 @@ import Image from "next/image";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { Button } from "@/components/ui/Button";
 
-const IMG = "/drive-download-20260209T114257Z-1-001";
-
 export function Experience() {
   return (
     <section className="bg-primary py-32">
@@ -21,10 +19,10 @@ export function Experience() {
           <div>
             <div className="relative mb-8 h-72 overflow-hidden rounded-sm">
               <Image
-                src={`${IMG}/0Y1A2293 copy.jpg`}
+                src="/images/perea day.jpg"
                 alt="חנות יין וטעימות"
                 fill
-                className="object-cover"
+                className="object-cover object-[center_70%]"
               />
             </div>
             <h3 className="font-heading-secondary text-h3 font-semibold text-cream-muted">
@@ -40,10 +38,10 @@ export function Experience() {
           <div>
             <div className="relative mb-8 h-72 overflow-hidden rounded-sm">
               <Image
-                src={`${IMG}/0Y1A2294 copy.jpg`}
+                src="/images/perea night.jpg"
                 alt="ביסטרו יין"
                 fill
-                className="object-cover"
+                className="object-cover object-[center_60%]"
               />
             </div>
             <h3 className="font-heading-secondary text-h3 font-semibold text-cream-muted">

@@ -6,10 +6,12 @@ import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { navigation } from "@/data/navigation";
+import { MenuModal } from "@/components/ui/MenuModal";
 
 export function Navigation() {
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
   const pathname = usePathname();
 
   useEffect(() => {
@@ -79,6 +81,14 @@ export function Navigation() {
             />
           </button>
 
+          {/* Menu button — desktop only */}
+          <button
+            onClick={() => setMenuOpen(true)}
+            className="absolute right-6 top-1/2 hidden -translate-y-1/2 items-center gap-2 border border-copper px-5 py-2 text-caption tracking-wide text-copper transition-all duration-300 hover:bg-copper hover:text-primary sm:flex"
+          >
+            תפריט
+          </button>
+
           {/* Logo — aligned to the left manually via absolute positioning on desktop */}
           <Link
             href="/"
@@ -126,11 +136,28 @@ export function Navigation() {
                     </Link>
                   </motion.li>
                 ))}
+                <motion.li
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.1 + navigation.length * 0.08 }}
+                >
+                  <button
+                    onClick={() => {
+                      setMobileOpen(false);
+                      setMenuOpen(true);
+                    }}
+                    className="mt-4 inline-block border border-copper px-8 py-3 font-sans text-h3 font-light text-copper transition-all duration-300 hover:bg-copper hover:text-primary"
+                  >
+                    תפריט
+                  </button>
+                </motion.li>
               </ul>
             </nav>
           </motion.div>
         )}
       </AnimatePresence>
+
+      <MenuModal open={menuOpen} onClose={() => setMenuOpen(false)} />
     </>
   );
 }

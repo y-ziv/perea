@@ -2,6 +2,14 @@
 
 import { useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import Image from "next/image";
+
+const MENU_PAGES = [
+  "/images/menu/page-1.jpg",
+  "/images/menu/page-2.jpg",
+  "/images/menu/page-3.jpg",
+  "/images/menu/page-4.jpg",
+];
 
 interface MenuModalProps {
   open: boolean;
@@ -39,40 +47,49 @@ export function MenuModal({ open, onClose }: MenuModalProps) {
           className="fixed inset-0 z-50 flex items-center justify-center bg-cream/60 backdrop-blur-sm"
           onClick={onClose}
         >
+          {/* Close button — fixed top-left */}
+          <button
+            onClick={onClose}
+            className="absolute left-4 top-4 z-50 flex h-10 w-10 items-center justify-center rounded-full bg-primary/80 text-cream backdrop-blur-sm transition-colors duration-200 hover:bg-warm"
+            aria-label="סגור תפריט"
+          >
+            <svg
+              width="18"
+              height="18"
+              viewBox="0 0 18 18"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="1.5"
+              strokeLinecap="round"
+            >
+              <line x1="1" y1="1" x2="17" y2="17" />
+              <line x1="17" y1="1" x2="1" y2="17" />
+            </svg>
+          </button>
+
+          {/* Scrollable menu pages */}
           <motion.div
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 0.95 }}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 20 }}
             transition={{ duration: 0.3 }}
-            className="relative h-[90vh] w-[90vw] max-w-4xl overflow-hidden rounded-sm bg-primary shadow-2xl"
+            className="h-[90vh] w-[90vw] max-w-3xl overflow-y-auto rounded-sm"
             onClick={(e) => e.stopPropagation()}
           >
-            {/* Close button */}
-            <button
-              onClick={onClose}
-              className="absolute left-4 top-4 z-10 flex h-10 w-10 items-center justify-center rounded-full bg-primary/80 text-cream backdrop-blur-sm transition-colors duration-200 hover:bg-warm"
-              aria-label="סגור תפריט"
-            >
-              <svg
-                width="18"
-                height="18"
-                viewBox="0 0 18 18"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="1.5"
-                strokeLinecap="round"
-              >
-                <line x1="1" y1="1" x2="17" y2="17" />
-                <line x1="17" y1="1" x2="1" y2="17" />
-              </svg>
-            </button>
-
-            {/* PDF embed */}
-            <iframe
-              src="/Menu.pdf"
-              title="תפריט פראה"
-              className="h-full w-full border-0"
-            />
+            <div className="flex flex-col gap-1">
+              {MENU_PAGES.map((src, i) => (
+                <div key={i} className="relative w-full">
+                  <Image
+                    src={src}
+                    alt={`תפריט עמוד ${i + 1}`}
+                    width={1600}
+                    height={2272}
+                    className="w-full h-auto"
+                    priority={i === 0}
+                  />
+                </div>
+              ))}
+            </div>
           </motion.div>
         </motion.div>
       )}

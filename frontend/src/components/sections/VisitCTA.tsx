@@ -4,7 +4,7 @@ import { siteConfig } from "@/data/siteConfig";
 
 export function VisitCTA() {
   return (
-    <section className="bg-primary py-32">
+    <section className="bg-primary py-10 sm:py-14">
       <div className="mx-auto max-w-6xl px-6">
         <div className="grid items-center gap-12 sm:grid-cols-2">
           {/* Right column — Text content (appears first in RTL) */}

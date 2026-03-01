@@ -5,13 +5,13 @@ import { Button } from "@/components/ui/Button";
 
 export function Experience() {
   return (
-    <section className="bg-primary py-32">
+    <section className="bg-primary py-10 sm:py-14">
       <div className="mx-auto max-w-6xl px-6">
         <SectionHeading
           overline="החוויה"
           heading="מהיום אל הלילה"
           align="center"
-          className="mb-20"
+          className="mb-6 sm:mb-10"
         />
 
         <div className="grid gap-12 sm:grid-cols-2">

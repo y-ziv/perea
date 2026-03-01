@@ -3,13 +3,13 @@ import { SectionHeading } from "@/components/ui/SectionHeading";
 
 export function WinePhilosophy() {
   return (
-    <section className="bg-secondary py-32">
+    <section className="bg-secondary py-10 sm:py-14">
       <div className="mx-auto max-w-7xl px-6">
         <SectionHeading
           overline="הפילוסופיה שלנו"
           heading="שתי ארצות, כוס אחת"
           align="center"
-          className="mb-20"
+          className="mb-6 sm:mb-10"
         />
 
         {/* Galilee */}

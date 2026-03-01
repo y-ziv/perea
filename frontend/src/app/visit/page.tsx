@@ -11,13 +11,13 @@ export const metadata: Metadata = {
 
 export default function VisitPage() {
   return (
-    <section className="bg-primary pt-32 pb-20">
+    <section className="bg-primary pt-24 pb-14 sm:pt-32 sm:pb-20">
       <div className="mx-auto max-w-4xl px-6">
         <SectionHeading
           overline="בקרו אותנו"
           heading="בואו לפראה"
           align="center"
-          className="mb-20"
+          className="mb-6 sm:mb-10"
         />
 
         {/* Hours */}

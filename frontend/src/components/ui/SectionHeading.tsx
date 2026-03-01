@@ -25,12 +25,14 @@ export function SectionHeading({
         </FadeIn>
       )}
       <FadeIn delay={0.1}>
-        <h2 className="font-serif text-h1 font-semibold text-[var(--color-header)]">
+        <h2 className="font-serif text-h3 font-semibold text-[var(--color-header)] sm:text-h2 lg:text-h1">
           {heading}
         </h2>
       </FadeIn>
       {subtitle && (
-        <p className="mt-5 max-w-2xl text-body-lg font-light leading-relaxed text-cream-muted">
+        <p
+          className={`mt-4 max-w-2xl text-body font-light leading-relaxed text-cream-muted sm:mt-5 sm:text-body-lg ${align === "center" ? "mx-auto" : ""}`}
+        >
           {subtitle}
         </p>
       )}

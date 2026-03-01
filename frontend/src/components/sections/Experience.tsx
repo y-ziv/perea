@@ -56,7 +56,7 @@ export function Experience() {
 
         <div className="mt-14 text-center">
           <Button href="/experience">
-            גלו את החוויה &larr;
+            לחוויה שלנו
           </Button>
         </div>
       </div>

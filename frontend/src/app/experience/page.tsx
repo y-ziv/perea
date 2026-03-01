@@ -13,13 +13,13 @@ export const metadata: Metadata = {
 
 export default function ExperiencePage() {
   return (
-    <section className="bg-primary pt-32 pb-20">
+    <section className="bg-primary pt-24 pb-14 sm:pt-32 sm:pb-20">
       <div className="mx-auto max-w-5xl px-6">
         <SectionHeading
           overline="החוויה"
           heading="מהיום אל הלילה"
           align="center"
-          className="mb-20"
+          className="mb-6 sm:mb-10"
         />
       </div>
 

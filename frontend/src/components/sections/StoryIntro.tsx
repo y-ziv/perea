@@ -4,7 +4,7 @@ import { SectionHeading } from "@/components/ui/SectionHeading";
 
 export function StoryIntro() {
   return (
-    <section className="bg-primary py-32">
+    <section className="bg-primary py-10 sm:py-14">
       <div className="mx-auto max-w-5xl px-6">
         <div className="grid items-center gap-12 sm:grid-cols-2">
           <div>

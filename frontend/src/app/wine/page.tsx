@@ -11,14 +11,14 @@ export const metadata: Metadata = {
 
 export default function WinePage() {
   return (
-    <section className="bg-primary pt-24 pb-16 sm:pt-32 sm:pb-20">
+    <section className="bg-primary pt-24 pb-14 sm:pt-32 sm:pb-20">
       <div className="mx-auto max-w-6xl px-4 sm:px-6">
         <SectionHeading
           overline="היינות"
           heading="מהאוסף שלנו"
           subtitle="יינות יוונים איכותיים מיקבי בוטיק בצפון יוון שאנו מייבאים בעצמנו, לצד יינות בוטיק של ייננים חברים מהטרואר המצוין של הגליל."
           align="center"
-          className="mb-12 sm:mb-20"
+          className="mb-6 sm:mb-10"
         />
 
         <div className="grid gap-8 sm:grid-cols-2 sm:gap-10 lg:grid-cols-3">

@@ -46,13 +46,13 @@ export function FeaturedWines() {
   }, []);
 
   return (
-    <section className="bg-secondary py-20 sm:py-32">
+    <section className="bg-secondary py-10 sm:py-14">
       <div className="mx-auto max-w-6xl px-4 sm:px-6">
         <SectionHeading
           overline="יינות נבחרים"
           heading="מהאוסף שלנו"
           align="center"
-          className="mb-10 sm:mb-16"
+          className="mb-6 sm:mb-10"
         />
 
         {/* Horizontal snap scroll — all screen sizes */}

@@ -51,6 +51,7 @@ export function FeaturedWines() {
         <SectionHeading
           overline="יינות נבחרים"
           heading="מהאוסף שלנו"
+          align="center"
           className="mb-10 sm:mb-16"
         />
 

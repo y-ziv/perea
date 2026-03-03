@@ -138,11 +138,11 @@ export function Hero() {
           />
           <div className="-mt-24 space-y-2">
             <h1 className="font-serif text-h1 font-medium text-white drop-shadow-sm md:text-display">
-              פראה – בית יין בגליל
+              פראה - בר וחנות יין משפחתית
             </h1>
-            <p className="font-heading-secondary text-h3 font-light tracking-wide text-white drop-shadow-sm md:text-h2">
+            {/* <p className="font-heading-secondary text-h3 font-light tracking-wide text-white drop-shadow-sm md:text-h2">
               שתי ארצות. כוס אחת.
-            </p>
+            </p> */}
           </div>
         </motion.div>
       </div>

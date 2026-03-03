@@ -7,7 +7,7 @@ const ease = [0.25, 0.1, 0.25, 1] as [number, number, number, number];
 
 export function Hero() {
   return (
-    <section className="relative flex min-h-screen items-center justify-center overflow-hidden bg-primary brightness-110">
+    <section className="relative flex min-h-screen items-center justify-center overflow-hidden bg-primary">
       {/* Background image */}
       <div className="absolute inset-0">
         <Image
@@ -22,8 +22,8 @@ export function Hero() {
         />
       </div>
 
-      {/* Warm overlay — gentle gradient at bottom only */}
-      <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-primary/80" />
+      {/* Gradient overlay — fades to cream (dark brown) to match StoryIntro */}
+      <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-cream" />
 
       {/* Logo */}
       <div className="relative z-10 flex flex-col items-center px-6 text-center">

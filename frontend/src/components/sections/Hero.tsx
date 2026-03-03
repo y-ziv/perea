@@ -58,8 +58,8 @@ export function Hero() {
               />
             </motion.div>
           </div>
-          <div className="-mt-24 space-y-2">
-            <h1 className="font-serif text-h1 font-medium text-white drop-shadow-sm md:text-display">
+          <div className="-mt-20 md:-mt-40">
+            <h1 className="font-handwritten text-h2 font-normal tracking-widest text-copper drop-shadow-sm md:text-h2">
               פראה - בר וחנות יין משפחתית
             </h1>
             {/* <p className="font-heading-secondary text-h3 font-light tracking-wide text-white drop-shadow-sm md:text-h2">

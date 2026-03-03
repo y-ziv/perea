@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { notoSansHebrew, rubik, assistant } from "@/lib/fonts";
+import { notoSansHebrew, rubik, assistant, amaticSC } from "@/lib/fonts";
 import { siteConfig } from "@/data/siteConfig";
 import { Navigation } from "@/components/layout/Navigation";
 import { Footer } from "@/components/layout/Footer";
@@ -67,7 +67,7 @@ export default function RootLayout({
         />
       </head>
       <body
-        className={`${notoSansHebrew.variable} ${rubik.variable} ${assistant.variable} font-sans antialiased`}
+        className={`${notoSansHebrew.variable} ${rubik.variable} ${assistant.variable} ${amaticSC.variable} font-sans antialiased`}
       >
         <Navigation />
         <main>{children}</main>

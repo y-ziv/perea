@@ -13,6 +13,21 @@ export interface Wine {
   featured?: boolean;
 }
 
+export interface WineWithPrice extends Wine {
+  _id: string;
+  slug: string;
+  priceAgorot: number;
+  stock: number;
+}
+
+export interface CartItem {
+  wineSlug: string;
+  quantity: number;
+  name: string;
+  priceAgorot: number;
+  image: string;
+}
+
 export interface WineEvent {
   slug: string;
   title: string;

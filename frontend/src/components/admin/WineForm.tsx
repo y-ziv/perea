@@ -244,19 +244,6 @@ export function WineForm({ initialData, mode }: WineFormProps) {
         </div>
       </div>
 
-      <div className="flex items-center gap-2">
-        <input
-          type="checkbox"
-          id="featured"
-          checked={form.featured}
-          onChange={(e) => updateField("featured", e.target.checked)}
-          className="accent-copper"
-        />
-        <label htmlFor="featured" className="text-body text-cream">
-          מוצר מומלץ
-        </label>
-      </div>
-
       <div className="flex gap-3">
         <button
           type="submit"

@@ -28,7 +28,6 @@ export default async function AdminWinesPage() {
               <th className="px-4 py-3 text-start">שם</th>
               <th className="px-4 py-3 text-start">מחיר</th>
               <th className="px-4 py-3 text-start">מלאי</th>
-              <th className="px-4 py-3 text-start">מומלץ</th>
               <th className="px-4 py-3 text-start">פעולות</th>
             </tr>
           </thead>
@@ -50,9 +49,6 @@ export default async function AdminWinesPage() {
                   {formatPrice(wine.priceAgorot)}
                 </td>
                 <td className="px-4 py-3 text-body text-cream">{wine.stock}</td>
-                <td className="px-4 py-3 text-body text-cream">
-                  {wine.featured ? "V" : "—"}
-                </td>
                 <td className="px-4 py-3">
                   <Link
                     href={`/admin/wines/${wine.slug}/edit`}

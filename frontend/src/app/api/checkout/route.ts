@@ -106,9 +106,14 @@ export async function POST(request: Request) {
       orderId,
       customerName: customer.name,
       customerEmail: customer.email,
-      indicatorUrl: `${baseUrl}/api/cardcom/indicator`,
+      webhookUrl: `${baseUrl}/api/cardcom/indicator`,
       successUrl: `${baseUrl}/checkout/success?orderId=${orderId}`,
       failureUrl: `${baseUrl}/checkout/failure?orderId=${orderId}`,
+      products: orderItems.map((item) => ({
+        description: item.name,
+        priceAgorot: item.priceAgorot,
+        quantity: item.quantity,
+      })),
     });
 
     // Store lowProfileCode

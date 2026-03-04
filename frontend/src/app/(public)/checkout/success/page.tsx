@@ -13,7 +13,7 @@ export default function SuccessPage() {
       fallback={
         <section className="bg-primary pt-32 pb-20">
           <div className="mx-auto max-w-lg px-4 text-center">
-            <div className="mx-auto mb-6 h-12 w-12 animate-spin rounded-full border-4 border-warm border-t-copper" />
+            <div className="mx-auto mb-6 h-12 w-12 animate-spin rounded-full border-4 border-warm border-t-copper" role="status" aria-label="טוען" />
             <h1 className="font-heading-secondary text-h3 text-copper">
               טוען...
             </h1>
@@ -129,7 +129,7 @@ function SuccessContent() {
     return (
       <section className="bg-primary pt-32 pb-20">
         <div className="mx-auto max-w-lg px-4 text-center">
-          <div className="mx-auto mb-6 h-12 w-12 animate-spin rounded-full border-4 border-warm border-t-copper" />
+          <div className="mx-auto mb-6 h-12 w-12 animate-spin rounded-full border-4 border-warm border-t-copper" role="status" aria-label="טוען" />
           <h1 className="font-heading-secondary text-h3 text-copper">
             מאמתים את התשלום...
           </h1>

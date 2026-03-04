@@ -10,7 +10,7 @@ import { useFocusTrap } from "@/hooks/useFocusTrap";
 import Link from "next/link";
 
 export function CartDrawer() {
-  const { items, isOpen, closeCart, totalAgorot } = useCart();
+  const { items, isOpen, closeCart, totalAgorot, updateQuantity, removeItem } = useCart();
 
   useScrollLock(isOpen);
   const trapRef = useFocusTrap(isOpen);
@@ -82,7 +82,12 @@ export function CartDrawer() {
               ) : (
                 <div className="space-y-4">
                   {items.map((item) => (
-                    <CartItemRow key={item.wineSlug} item={item} />
+                    <CartItemRow
+                      key={item.wineSlug}
+                      item={item}
+                      onUpdateQuantity={updateQuantity}
+                      onRemove={removeItem}
+                    />
                   ))}
                 </div>
               )}

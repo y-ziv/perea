@@ -2,12 +2,20 @@
 
 import { memo } from "react";
 import Image from "next/image";
-import { useCart } from "@/context/CartContext";
 import { formatPrice } from "@/lib/format";
 import type { CartItem } from "@/types";
 
-export const CartItemRow = memo(function CartItemRow({ item }: { item: CartItem }) {
-  const { updateQuantity, removeItem } = useCart();
+interface CartItemRowProps {
+  item: CartItem;
+  onUpdateQuantity: (wineSlug: string, quantity: number) => void;
+  onRemove: (wineSlug: string) => void;
+}
+
+export const CartItemRow = memo(function CartItemRow({
+  item,
+  onUpdateQuantity: updateQuantity,
+  onRemove: removeItem,
+}: CartItemRowProps) {
 
   return (
     <div className="flex gap-4">

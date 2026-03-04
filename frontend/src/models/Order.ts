@@ -33,7 +33,7 @@ const OrderItemSchema = new Schema<IOrderItem>(
     wineId: { type: Schema.Types.ObjectId, required: true, ref: "Wine" },
     wineSlug: { type: String, required: true },
     name: { type: String, required: true },
-    priceAgorot: { type: Number, required: true, min: 0 },
+    priceAgorot: { type: Number, required: true, min: 1 },
     quantity: { type: Number, required: true, min: 1, max: 100 },
   },
   { _id: false }

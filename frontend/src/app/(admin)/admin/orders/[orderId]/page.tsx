@@ -34,7 +34,7 @@ export default async function OrderDetailPage({
         <OrderStatusBadge status={order.status} />
       </div>
 
-      <div className="mt-8 grid grid-cols-2 gap-8">
+      <div className="mt-8 grid grid-cols-1 gap-8 md:grid-cols-2">
         <div className="rounded border border-warm bg-primary p-6">
           <h2 className="font-heading-secondary text-h4 text-copper">
             פרטי לקוח
@@ -120,8 +120,8 @@ export default async function OrderDetailPage({
             </tr>
           </thead>
           <tbody className="divide-y divide-warm">
-            {order.items.map((item: IOrderItem, i: number) => (
-              <tr key={i}>
+            {order.items.map((item: IOrderItem) => (
+              <tr key={item.wineSlug}>
                 <td className="py-2 text-body text-cream">{item.name}</td>
                 <td className="py-2 text-body text-cream">
                   {formatPrice(item.priceAgorot)}

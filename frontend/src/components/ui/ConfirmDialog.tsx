@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useId } from "react";
+import { useEffect, useId, useRef } from "react";
 import { useFocusTrap } from "@/hooks/useFocusTrap";
 
 interface ConfirmDialogProps {
@@ -26,15 +26,19 @@ export function ConfirmDialog({
 }: ConfirmDialogProps) {
   const trapRef = useFocusTrap(open);
   const titleId = useId();
+  const onCancelRef = useRef(onCancel);
+  useEffect(() => {
+    onCancelRef.current = onCancel;
+  }, [onCancel]);
 
   useEffect(() => {
     if (!open) return;
     function handleKeyDown(e: KeyboardEvent) {
-      if (e.key === "Escape") onCancel();
+      if (e.key === "Escape") onCancelRef.current();
     }
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [open, onCancel]);
+  }, [open]);
 
   if (!open) return null;
 

@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { SectionHeading } from "@/components/ui/SectionHeading";
-import { WineCard } from "@/components/store/WineCard";
+import { WineGrid } from "@/components/store/WineGrid";
 import { getAllWines } from "@/lib/wines";
 
 export const metadata: Metadata = {
@@ -30,23 +30,7 @@ export default async function WinePage() {
             אין יינות זמינים כרגע. בקרו שוב בקרוב!
           </p>
         ) : (
-          <div className="grid gap-8 sm:grid-cols-2 sm:gap-10 lg:grid-cols-3">
-            {wines.map((wine) => (
-              <WineCard
-                key={wine.slug}
-                slug={wine.slug}
-                name={wine.name}
-                winery={wine.winery}
-                country={wine.country}
-                grape={wine.grape}
-                year={wine.year}
-                description={wine.description}
-                image={wine.image}
-                priceAgorot={wine.priceAgorot}
-                stock={wine.stock}
-              />
-            ))}
-          </div>
+          <WineGrid wines={wines} />
         )}
       </div>
     </section>

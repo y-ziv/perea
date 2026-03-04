@@ -49,8 +49,13 @@ function loadCart(): CartItem[] {
   }
 }
 
+function safeLoadCart(): CartItem[] {
+  if (typeof window === "undefined") return [];
+  return loadCart();
+}
+
 export function CartProvider({ children }: { children: ReactNode }) {
-  const [items, setItems] = useState<CartItem[]>(loadCart);
+  const [items, setItems] = useState<CartItem[]>(safeLoadCart);
   const [isOpen, setIsOpen] = useState(false);
 
   useEffect(() => {
@@ -109,21 +114,24 @@ export function CartProvider({ children }: { children: ReactNode }) {
     [items]
   );
 
+  const value = useMemo(
+    () => ({
+      items,
+      addItem,
+      removeItem,
+      updateQuantity,
+      clearCart,
+      totalAgorot,
+      totalItems,
+      isOpen,
+      openCart,
+      closeCart,
+    }),
+    [items, addItem, removeItem, updateQuantity, clearCart, totalAgorot, totalItems, isOpen, openCart, closeCart]
+  );
+
   return (
-    <CartContext.Provider
-      value={{
-        items,
-        addItem,
-        removeItem,
-        updateQuantity,
-        clearCart,
-        totalAgorot,
-        totalItems,
-        isOpen,
-        openCart,
-        closeCart,
-      }}
-    >
+    <CartContext.Provider value={value}>
       {children}
     </CartContext.Provider>
   );

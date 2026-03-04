@@ -2,10 +2,10 @@
 
 import { memo } from "react";
 import Image from "next/image";
-import { useCart } from "@/context/CartContext";
 import { formatPrice } from "@/lib/format";
+import type { CartItem } from "@/types";
 
-interface WineCardProps {
+export interface WineCardProps {
   slug: string;
   name: string;
   winery: string;
@@ -16,6 +16,7 @@ interface WineCardProps {
   image: string;
   priceAgorot: number;
   stock: number;
+  onAddToCart: (item: CartItem) => void;
 }
 
 const COUNTRY_NAMES: Record<string, string> = {
@@ -24,7 +25,7 @@ const COUNTRY_NAMES: Record<string, string> = {
 };
 
 export const WineCard = memo(function WineCard(wine: WineCardProps) {
-  const { addItem } = useCart();
+  const addItem = wine.onAddToCart;
 
   const outOfStock = wine.stock <= 0;
   const noPrice = wine.priceAgorot <= 0;

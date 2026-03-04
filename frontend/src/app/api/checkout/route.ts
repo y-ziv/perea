@@ -20,7 +20,7 @@ export async function POST(request: Request) {
   // CSRF protection: verify the request originates from our own domain
   const origin = request.headers.get("origin");
   const baseUrl = env.BASE_URL;
-  if (origin && new URL(origin).origin !== new URL(baseUrl).origin) {
+  if (!origin || new URL(origin).origin !== new URL(baseUrl).origin) {
     return NextResponse.json({ error: "Forbidden" }, { status: 403 });
   }
 
@@ -97,7 +97,6 @@ export async function POST(request: Request) {
 
     // Create order
     const orderId = randomUUID();
-    const baseUrl = env.BASE_URL;
 
     const order = await Order.create({
       orderId,

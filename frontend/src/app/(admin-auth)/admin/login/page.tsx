@@ -6,9 +6,13 @@ import { signIn } from "next-auth/react";
 export default function AdminLoginPage() {
   const [loading, setLoading] = useState(false);
 
-  function handleSignIn() {
+  async function handleSignIn() {
     setLoading(true);
-    signIn("google", { callbackUrl: "/admin" });
+    try {
+      await signIn("google", { callbackUrl: "/admin" });
+    } catch {
+      setLoading(false);
+    }
   }
 
   return (

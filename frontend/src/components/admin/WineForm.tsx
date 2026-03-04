@@ -219,6 +219,16 @@ export function WineForm({ initialData, mode }: WineFormProps) {
         />
       </div>
 
+      <label className="flex cursor-pointer items-center gap-2 text-body text-cream">
+        <input
+          type="checkbox"
+          checked={form.featured}
+          onChange={(e) => updateField("featured", e.target.checked)}
+          className="accent-copper h-4 w-4"
+        />
+        יין מומלץ (מוצג בדף הבית)
+      </label>
+
       <div className="grid grid-cols-2 gap-4">
         <div>
           <label htmlFor="wine-price" className={labelClass}>מחיר (₪{priceILS})</label>

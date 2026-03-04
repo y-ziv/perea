@@ -54,7 +54,7 @@ export default async function AdminOrdersPage({
         {tabs.map((tab) => (
           <Link
             key={tab.value}
-            href={tab.value ? `/admin/orders?status=${tab.value}${q ? `&q=${q}` : ""}` : `/admin/orders${q ? `?q=${q}` : ""}`}
+            href={tab.value ? `/admin/orders?status=${tab.value}${q ? `&q=${encodeURIComponent(q)}` : ""}` : `/admin/orders${q ? `?q=${encodeURIComponent(q)}` : ""}`}
             className={`rounded px-4 py-2 text-caption transition-colors ${
               (status ?? "") === tab.value
                 ? "bg-copper text-primary"
@@ -118,6 +118,11 @@ export default async function AdminOrdersPage({
         {orders.length === 0 && (
           <p className="p-8 text-center text-body text-cream-muted">
             אין הזמנות
+          </p>
+        )}
+        {orders.length === 100 && (
+          <p className="p-4 text-center text-caption text-cream-muted">
+            מוצגות 100 הזמנות אחרונות. השתמשו בחיפוש כדי למצוא הזמנות נוספות.
           </p>
         )}
       </div>

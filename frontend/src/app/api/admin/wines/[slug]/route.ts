@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { connectDB } from "@/lib/mongodb";
 import { Wine } from "@/models/Wine";
+import { Order } from "@/models/Order";
 import { revalidatePath } from "next/cache";
 import { withAdminAuth } from "@/lib/admin-auth";
 import { slugSchema, wineUpdateSchema } from "@/lib/validations";
@@ -67,6 +68,18 @@ export const DELETE = withAdminAuth(async (_request, { params }) => {
     }
     const slug = rawSlug;
     await connectDB();
+
+    const hasPendingOrders = await Order.exists({
+      "items.wineSlug": slug,
+      status: "PENDING",
+    });
+    if (hasPendingOrders) {
+      return NextResponse.json(
+        { error: "לא ניתן למחוק יין עם הזמנות ממתינות" },
+        { status: 400 }
+      );
+    }
+
     const wine = await Wine.findOneAndDelete({ slug });
 
     if (!wine) {

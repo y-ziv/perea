@@ -45,6 +45,7 @@ export function ImageUpload({ value, onChange }: ImageUploadProps) {
       toast.error("שגיאה בהעלאת התמונה");
     } finally {
       setUploading(false);
+      if (inputRef.current) inputRef.current.value = "";
     }
   }
 

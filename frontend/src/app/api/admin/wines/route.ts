@@ -8,7 +8,7 @@ import { wineSchema } from "@/lib/validations";
 export const GET = withAdminAuth(async () => {
   try {
     await connectDB();
-    const wines = await Wine.find().sort({ createdAt: -1 }).lean();
+    const wines = await Wine.find().sort({ createdAt: -1 }).limit(500).lean();
     return NextResponse.json(wines);
   } catch (error) {
     console.error("GET /api/admin/wines:", error);

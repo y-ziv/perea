@@ -33,7 +33,7 @@ const WineSchema = new Schema<IWine>(
     description: { type: String, required: true },
     image: { type: String, required: true },
     featured: { type: Boolean, default: false },
-    priceAgorot: { type: Number, required: true, min: 0 },
+    priceAgorot: { type: Number, required: true, min: 1 },
     stock: { type: Number, required: true, min: 0, default: 0 },
   },
   { timestamps: true }

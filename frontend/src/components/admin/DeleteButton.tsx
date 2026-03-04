@@ -42,6 +42,7 @@ export function DeleteButton({
     } catch (err) {
       console.error("Delete error:", err);
       toast.error(err instanceof Error ? err.message : "שגיאה במחיקה");
+    } finally {
       setDeleting(false);
     }
   }

@@ -4,25 +4,11 @@ import { Order } from "@/models/Order";
 import { Wine } from "@/models/Wine";
 import { getLowProfileResult } from "@/lib/cardcom";
 
-/**
- * Check if the webhook data itself indicates a successful payment.
- * Cardcom v11 webhooks include full TranzactionInfo with ResponseCode.
- */
-function isWebhookApproved(data: Record<string, unknown>): {
-  approved: boolean;
-  transactionId: string;
-} {
-  const topLevelOk = data.ResponseCode == 0;
-  const txId = String(
+/** Extract the transaction ID from the webhook payload (used only as a fallback ID). */
+function extractWebhookTransactionId(data: Record<string, unknown>): string {
+  return String(
     data.TranzactionId || data.tranzactionId || data.InternalDealNumber || data.internalDealNumber || ""
   );
-  const txInfo = data.TranzactionInfo as Record<string, unknown> | null;
-  const txInfoOk = txInfo && txInfo.ResponseCode == 0;
-
-  return {
-    approved: topLevelOk && !!txId && txId !== "0" && !!txInfoOk,
-    transactionId: txId,
-  };
 }
 
 export async function POST(request: Request) {
@@ -76,7 +62,7 @@ export async function POST(request: Request) {
 
     // Primary verification: check the webhook payload itself.
     // Cardcom v11 webhooks include ResponseCode + TranzactionInfo directly.
-    const webhookResult = isWebhookApproved(webhookData);
+    const webhookTransactionId = extractWebhookTransactionId(webhookData);
 
     // Secondary verification: call GetLpResult API as cross-check.
     // Note: this API returns 5096 on test terminal 1000, so we don't fail
@@ -100,12 +86,12 @@ export async function POST(request: Request) {
     // Payment is approved ONLY if the server-to-server API check confirms it.
     // The webhook data alone is never trusted (endpoint is unauthenticated).
     const approved = apiVerified;
-    const transactionId = apiTransactionId || webhookResult.transactionId;
+    const transactionId = apiTransactionId || webhookTransactionId;
 
     if (!approved) {
       console.warn(
         `Indicator: payment not approved for order ${targetOrder.orderId} ` +
-        `(webhook=${webhookResult.approved}, api=${apiVerified})`
+        `(api=${apiVerified})`
       );
       const failed = await Order.findOneAndUpdate(
         { orderId: targetOrder.orderId, status: "PENDING" },

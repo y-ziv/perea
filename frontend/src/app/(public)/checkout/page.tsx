@@ -117,6 +117,8 @@ export default function CheckoutPage() {
 
       const { redirectUrl } = await res.json();
       window.location.href = redirectUrl;
+      // Fallback: if navigation doesn't happen within 5s, re-enable the button
+      setTimeout(() => setLoading(false), 5000);
     } catch (err) {
       setError(err instanceof Error ? err.message : "שגיאה בביצוע ההזמנה");
       setLoading(false);

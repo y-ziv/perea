@@ -36,13 +36,11 @@ export const DELETE = withAdminAuth(async (_request, { params }) => {
     }
 
     await connectDB();
-    const order = await Order.findOne({ orderId: parsed.data });
+    const order = await Order.findOneAndDelete({ orderId: parsed.data });
 
     if (!order) {
       return NextResponse.json({ error: "Not found" }, { status: 404 });
     }
-
-    await Order.findOneAndDelete({ orderId: parsed.data });
 
     // Restore reserved stock only for unpaid orders (paid = items were sold)
     if (order.status !== "PAID") {

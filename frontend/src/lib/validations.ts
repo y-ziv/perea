@@ -10,24 +10,27 @@ export const slugSchema = z
 // --- Wine ---
 
 export const wineSchema = z.object({
-  name: z.string().min(1),
+  name: z.string().min(1).max(200),
 
   slug: slugSchema,
-  winery: z.string().min(1),
+  winery: z.string().min(1).max(200),
   region: z.enum(["galilee", "northern-greece"]),
   country: z.enum(["Israel", "Greece"]),
   type: z.enum(["red", "white", "rosé", "orange"]),
-  grape: z.string().min(1),
+  grape: z.string().min(1).max(200),
   year: z.number().int().min(1900).max(2100).optional(),
-  description: z.string().min(1),
+  description: z.string().min(1).max(5000),
 
-  image: z.string().url("Image must be a valid URL").optional(),
-  priceAgorot: z.number().int().min(1, "Price must be at least 1 agora"),
+  image: z.string().url("Image must be a valid URL").refine(
+    (url) => url.startsWith("https://"),
+    "Image must be an HTTPS URL"
+  ),
+  priceAgorot: z.number().int().min(1, "Price must be at least 1 agora").max(10_000_000),
   stock: z.number().int().min(0),
   featured: z.boolean().optional(),
 });
 
-export const wineUpdateSchema = wineSchema.partial().refine(
+export const wineUpdateSchema = wineSchema.omit({ slug: true }).partial().refine(
   (data) => Object.keys(data).length > 0,
   { message: "At least one field is required" }
 );

@@ -1,8 +1,10 @@
 import { Hero } from "@/components/sections/Hero";
 import { StoryIntro } from "@/components/sections/StoryIntro";
 import { Experience } from "@/components/sections/Experience";
-import { FeaturedWines } from "@/components/sections/FeaturedWines";
+import { FeaturedWinesSection } from "@/components/sections/FeaturedWinesSection";
 import { VisitCTA } from "@/components/sections/VisitCTA";
+
+export const dynamic = "force-dynamic";
 
 export default function Home() {
   return (
@@ -10,7 +12,7 @@ export default function Home() {
       <Hero />
       <StoryIntro />
       <Experience />
-      <FeaturedWines />
+      <FeaturedWinesSection />
       <VisitCTA />
     </>
   );

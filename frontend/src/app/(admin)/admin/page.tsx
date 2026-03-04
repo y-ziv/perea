@@ -21,7 +21,7 @@ export default async function AdminDashboard() {
   return (
     <div>
       <h1 className="font-heading-secondary text-h3 text-copper">דשבורד</h1>
-      <div className="mt-8 grid grid-cols-3 gap-6">
+      <div className="mt-8 grid grid-cols-1 gap-6 md:grid-cols-3">
         {stats.map((stat) => (
           <Link
             key={stat.label}

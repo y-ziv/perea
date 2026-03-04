@@ -6,6 +6,7 @@ import {
   useState,
   useEffect,
   useCallback,
+  useMemo,
   type ReactNode,
 } from "react";
 import type { CartItem } from "@/types";
@@ -27,21 +28,37 @@ const CartContext = createContext<CartContextType | null>(null);
 
 const CART_KEY = "perea-cart";
 
+function loadCart(): CartItem[] {
+  try {
+    const stored = localStorage.getItem(CART_KEY);
+    if (!stored) return [];
+    const parsed = JSON.parse(stored);
+    if (!Array.isArray(parsed)) return [];
+    return parsed.filter(
+      (item: unknown): item is CartItem =>
+        typeof item === "object" &&
+        item !== null &&
+        "wineSlug" in item &&
+        "quantity" in item &&
+        "priceAgorot" in item &&
+        "name" in item &&
+        "image" in item
+    );
+  } catch {
+    return [];
+  }
+}
+
 export function CartProvider({ children }: { children: ReactNode }) {
   const [items, setItems] = useState<CartItem[]>([]);
   const [isOpen, setIsOpen] = useState(false);
   const [loaded, setLoaded] = useState(false);
 
-  // Load from localStorage
   useEffect(() => {
-    try {
-      const stored = localStorage.getItem(CART_KEY);
-      if (stored) setItems(JSON.parse(stored));
-    } catch {}
+    setItems(loadCart());
     setLoaded(true);
   }, []);
 
-  // Persist to localStorage
   useEffect(() => {
     if (loaded) {
       localStorage.setItem(CART_KEY, JSON.stringify(items));
@@ -52,13 +69,12 @@ export function CartProvider({ children }: { children: ReactNode }) {
     setItems((prev) => {
       const existing = prev.find((i) => i.wineSlug === item.wineSlug);
       if (existing) {
+        const newQty = Math.min(existing.quantity + item.quantity, item.stock);
         return prev.map((i) =>
-          i.wineSlug === item.wineSlug
-            ? { ...i, quantity: i.quantity + item.quantity }
-            : i
+          i.wineSlug === item.wineSlug ? { ...i, quantity: newQty } : i
         );
       }
-      return [...prev, item];
+      return [...prev, { ...item, quantity: Math.min(item.quantity, item.stock) }];
     });
     setIsOpen(true);
   }, []);
@@ -74,7 +90,10 @@ export function CartProvider({ children }: { children: ReactNode }) {
         return;
       }
       setItems((prev) =>
-        prev.map((i) => (i.wineSlug === wineSlug ? { ...i, quantity } : i))
+        prev.map((i) => {
+          if (i.wineSlug !== wineSlug) return i;
+          return { ...i, quantity: Math.min(quantity, i.stock) };
+        })
       );
     },
     [removeItem]
@@ -85,12 +104,18 @@ export function CartProvider({ children }: { children: ReactNode }) {
     setIsOpen(false);
   }, []);
 
-  const totalAgorot = items.reduce(
-    (sum, item) => sum + item.priceAgorot * item.quantity,
-    0
+  const openCart = useCallback(() => setIsOpen(true), []);
+  const closeCart = useCallback(() => setIsOpen(false), []);
+
+  const totalAgorot = useMemo(
+    () => items.reduce((sum, item) => sum + item.priceAgorot * item.quantity, 0),
+    [items]
   );
 
-  const totalItems = items.reduce((sum, item) => sum + item.quantity, 0);
+  const totalItems = useMemo(
+    () => items.reduce((sum, item) => sum + item.quantity, 0),
+    [items]
+  );
 
   return (
     <CartContext.Provider
@@ -103,8 +128,8 @@ export function CartProvider({ children }: { children: ReactNode }) {
         totalAgorot,
         totalItems,
         isOpen,
-        openCart: () => setIsOpen(true),
-        closeCart: () => setIsOpen(false),
+        openCart,
+        closeCart,
       }}
     >
       {children}

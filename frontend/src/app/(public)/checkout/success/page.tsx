@@ -5,7 +5,7 @@ import { useSearchParams } from "next/navigation";
 import { useCart } from "@/context/CartContext";
 import Link from "next/link";
 
-type OrderStatus = "PENDING" | "PAID" | "FAILED" | "NOT_FOUND" | "LOADING";
+type OrderStatus = "PENDING" | "PAID" | "FAILED" | "NOT_FOUND" | "LOADING" | "TIMEOUT";
 
 export default function SuccessPage() {
   return (
@@ -41,14 +41,17 @@ function SuccessContent() {
 
     let attempts = 0;
     const maxAttempts = 15; // 30 seconds at 2s intervals
-    let timer: ReturnType<typeof setInterval>;
+    let cancelled = false;
+    let timer: ReturnType<typeof setTimeout>;
 
     async function poll() {
+      if (cancelled) return;
       try {
         const res = await fetch(`/api/orders/${orderId}`);
+        if (cancelled) return;
+
         if (!res.ok) {
           setStatus("NOT_FOUND");
-          clearInterval(timer);
           return;
         }
 
@@ -60,13 +63,11 @@ function SuccessContent() {
             clearedRef.current = true;
             clearCart();
           }
-          clearInterval(timer);
           return;
         }
 
         if (data.status === "FAILED") {
           setStatus("FAILED");
-          clearInterval(timer);
           return;
         }
 
@@ -74,21 +75,55 @@ function SuccessContent() {
         setStatus("PENDING");
         attempts++;
         if (attempts >= maxAttempts) {
-          clearInterval(timer);
+          setStatus("TIMEOUT");
+          return;
         }
+        timer = setTimeout(poll, 2000);
       } catch {
+        if (cancelled) return;
         attempts++;
         if (attempts >= maxAttempts) {
-          clearInterval(timer);
+          setStatus("TIMEOUT");
+          return;
         }
+        timer = setTimeout(poll, 2000);
       }
     }
 
     poll();
-    timer = setInterval(poll, 2000);
 
-    return () => clearInterval(timer);
+    return () => {
+      cancelled = true;
+      clearTimeout(timer);
+    };
   }, [orderId, clearCart]);
+
+  if (status === "TIMEOUT") {
+    return (
+      <section className="bg-primary pt-32 pb-20">
+        <div className="mx-auto max-w-lg px-4 text-center">
+          <h1 className="font-heading-secondary text-h3 text-copper">
+            אימות התשלום נמשך זמן רב
+          </h1>
+          <p className="mt-4 text-body text-cream-muted">
+            לא הצלחנו לאמת את התשלום בזמן. אם חויבתם, ההזמנה תתעדכן בקרוב.
+            לשאלות צרו קשר.
+          </p>
+          {orderId && (
+            <p className="mt-2 text-caption text-cream-muted">
+              מזהה הזמנה: {orderId}
+            </p>
+          )}
+          <Link
+            href="/store"
+            className="mt-8 inline-block border border-copper px-8 py-3 text-caption font-medium text-copper transition-colors hover:bg-copper hover:text-primary"
+          >
+            חזרה לחנות
+          </Link>
+        </div>
+      </section>
+    );
+  }
 
   if (status === "LOADING" || status === "PENDING") {
     return (

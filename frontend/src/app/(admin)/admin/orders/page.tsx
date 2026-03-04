@@ -2,7 +2,7 @@ import { connectDB } from "@/lib/mongodb";
 import { Order } from "@/models/Order";
 import { formatPrice } from "@/lib/format";
 import { OrderStatusBadge } from "@/components/admin/OrderStatusBadge";
-import { DeleteOrderButton } from "@/components/admin/DeleteOrderButton";
+import { DeleteButton } from "@/components/admin/DeleteButton";
 import { OrderSearch } from "@/components/admin/OrderSearch";
 import Link from "next/link";
 import { Suspense } from "react";
@@ -15,17 +15,23 @@ export default async function AdminOrdersPage({
   const { status, q } = await searchParams;
   await connectDB();
 
+  // Escape regex special characters to prevent ReDoS
+  function escapeRegex(str: string) {
+    return str.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  }
+
   const filter: Record<string, unknown> = {};
   if (status) filter.status = status;
   if (q) {
-    const regex = { $regex: q, $options: "i" };
+    const escaped = escapeRegex(q);
+    const regex = { $regex: escaped, $options: "i" };
     filter.$or = [
       { orderId: regex },
       { "customer.name": regex },
       { "customer.phone": regex },
     ];
   }
-  const orders = await Order.find(filter).sort({ createdAt: -1 }).lean();
+  const orders = await Order.find(filter).sort({ createdAt: -1 }).limit(100).lean();
 
   const tabs = [
     { label: "הכל", value: "" },
@@ -48,7 +54,7 @@ export default async function AdminOrdersPage({
         {tabs.map((tab) => (
           <Link
             key={tab.value}
-            href={tab.value ? `/admin/orders?status=${tab.value}` : "/admin/orders"}
+            href={tab.value ? `/admin/orders?status=${tab.value}${q ? `&q=${q}` : ""}` : `/admin/orders${q ? `?q=${q}` : ""}`}
             className={`rounded px-4 py-2 text-caption transition-colors ${
               (status ?? "") === tab.value
                 ? "bg-copper text-primary"
@@ -100,7 +106,12 @@ export default async function AdminOrdersPage({
                   {new Date(order.createdAt).toLocaleDateString("he-IL")}
                 </td>
                 <td className="px-4 py-3">
-                  <DeleteOrderButton orderId={order.orderId} />
+                  {order.status !== "PAID" && (
+                    <DeleteButton
+                      endpoint={`/api/admin/orders/${order.orderId}`}
+                      confirmMessage="למחוק את ההזמנה?"
+                    />
+                  )}
                 </td>
               </tr>
             ))}

@@ -2,9 +2,32 @@ import { NextResponse } from "next/server";
 import { connectDB } from "@/lib/mongodb";
 import { Order } from "@/models/Order";
 import { Wine } from "@/models/Wine";
+import { getLowProfileResult } from "@/lib/cardcom";
+
+/**
+ * Check if the webhook data itself indicates a successful payment.
+ * Cardcom v11 webhooks include full TranzactionInfo with ResponseCode.
+ */
+function isWebhookApproved(data: Record<string, unknown>): {
+  approved: boolean;
+  transactionId: string;
+} {
+  // eslint-disable-next-line eqeqeq
+  const topLevelOk = data.ResponseCode == 0;
+  const txId = String(
+    data.TranzactionId || data.tranzactionId || data.InternalDealNumber || data.internalDealNumber || ""
+  );
+  const txInfo = data.TranzactionInfo as Record<string, unknown> | null;
+  // eslint-disable-next-line eqeqeq
+  const txInfoOk = txInfo && txInfo.ResponseCode == 0;
+
+  return {
+    approved: topLevelOk && !!txId && txId !== "0" && !!txInfoOk,
+    transactionId: txId,
+  };
+}
 
 export async function POST(request: Request) {
-  // Parse webhook body — log it to see what Cardcom sends
   let webhookData: Record<string, unknown> = {};
 
   const contentType = request.headers.get("content-type") || "";
@@ -17,24 +40,12 @@ export async function POST(request: Request) {
     });
   }
 
-  console.log("Cardcom webhook received:", JSON.stringify(webhookData, null, 2));
+  console.info("Cardcom webhook data:", JSON.stringify(webhookData));
 
-  // Extract fields — Cardcom v11 webhook fields
   const lowProfileCode =
     (webhookData.LowProfileId as string) ||
     (webhookData.LowProfileCode as string) ||
     (webhookData.lowprofilecode as string);
-
-  const responseCode =
-    webhookData.ResponseCode ?? webhookData.ResponeCode ?? webhookData.responseCode;
-
-  const dealResponse =
-    webhookData.DealResponse ?? webhookData.dealResponse;
-
-  const internalDealNumber =
-    (webhookData.InternalDealNumber as string) ||
-    (webhookData.internalDealNumber as string) ||
-    "";
 
   const returnValue =
     (webhookData.ReturnValue as string) ||
@@ -49,48 +60,77 @@ export async function POST(request: Request) {
   try {
     await connectDB();
 
-    const order = await Order.findOne({ lowProfileCode });
-    if (!order) {
-      // Try finding by ReturnValue (orderId)
-      const orderByReturn = returnValue
-        ? await Order.findOne({ orderId: returnValue })
-        : null;
-      if (!orderByReturn) {
-        console.error(
-          `Indicator: no order found for lpCode=${lowProfileCode} returnValue=${returnValue}`
-        );
-        return NextResponse.json({ status: "ok" });
-      }
-    }
+    // Find order by lowProfileCode or by orderId (ReturnValue)
+    const targetOrder =
+      (await Order.findOne({ lowProfileCode })) ||
+      (returnValue ? await Order.findOne({ orderId: returnValue }) : null);
 
-    const targetOrder = order || (await Order.findOne({ orderId: returnValue }));
     if (!targetOrder) {
+      console.error(
+        `Indicator: no order found for lpCode=${lowProfileCode} returnValue=${returnValue}`
+      );
       return NextResponse.json({ status: "ok" });
     }
 
-    // Check if payment was successful from webhook data
-    // Cardcom sends ResponseCode=0 and/or DealResponse=0 on success
-    const isApproved =
-      Number(responseCode) === 0 || Number(dealResponse) === 0;
+    // Primary verification: check the webhook payload itself.
+    // Cardcom v11 webhooks include ResponseCode + TranzactionInfo directly.
+    const webhookResult = isWebhookApproved(webhookData);
 
-    if (!isApproved) {
-      console.log(
-        `Indicator: payment not approved for order ${targetOrder.orderId} (ResponseCode=${responseCode}, DealResponse=${dealResponse})`
+    // Secondary verification: call GetLpResult API as cross-check.
+    // Note: this API returns 5096 on test terminal 1000, so we don't fail
+    // the payment if GetLpResult is unavailable but the webhook indicates success.
+    let apiVerified = false;
+    let apiTransactionId = "";
+    try {
+      const lpResult = await getLowProfileResult(lowProfileCode);
+      apiVerified = lpResult.approved;
+      apiTransactionId = lpResult.cardcomTransactionId;
+      console.info(
+        `Indicator: GetLpResult approved=${apiVerified} txId=${apiTransactionId}`
       );
-      await Order.findOneAndUpdate(
+    } catch (err) {
+      console.warn("Indicator: GetLpResult call failed, relying on webhook data:", err);
+    }
+
+    // Payment is approved if either source confirms it
+    const approved = webhookResult.approved || apiVerified;
+    const transactionId = apiTransactionId || webhookResult.transactionId;
+
+    if (!approved) {
+      console.warn(
+        `Indicator: payment not approved for order ${targetOrder.orderId} ` +
+        `(webhook=${webhookResult.approved}, api=${apiVerified})`
+      );
+      const failed = await Order.findOneAndUpdate(
         { orderId: targetOrder.orderId, status: "PENDING" },
-        { $set: { status: "FAILED" } }
+        { $set: { status: "FAILED" } },
+        { new: true }
       );
+
+      // Restore stock that was reserved at checkout
+      if (failed) {
+        await Promise.all(
+          failed.items.map((item) =>
+            Wine.updateOne(
+              { slug: item.wineSlug },
+              { $inc: { stock: item.quantity } }
+            )
+          )
+        );
+        console.info(
+          `Order ${failed.orderId} marked FAILED, stock restored`
+        );
+      }
       return NextResponse.json({ status: "ok" });
     }
 
-    // Atomic PENDING → PAID
+    // Stock was already reserved at checkout — just mark order as PAID
     const updated = await Order.findOneAndUpdate(
       { orderId: targetOrder.orderId, status: "PENDING" },
       {
         $set: {
           status: "PAID",
-          cardcomTransactionId: String(internalDealNumber),
+          cardcomTransactionId: transactionId,
           paymentVerifiedAt: new Date(),
         },
       },
@@ -98,18 +138,11 @@ export async function POST(request: Request) {
     );
 
     if (updated) {
-      // Decrement stock for each item
-      for (const item of updated.items) {
-        await Wine.findOneAndUpdate(
-          { slug: item.wineSlug, stock: { $gte: item.quantity } },
-          { $inc: { stock: -item.quantity } }
-        );
-      }
-      console.log(
-        `Order ${targetOrder.orderId} marked as PAID, stock updated (tx: ${internalDealNumber})`
+      console.info(
+        `Order ${updated.orderId} marked as PAID (tx: ${transactionId})`
       );
     } else {
-      console.log(
+      console.info(
         `Order ${targetOrder.orderId} already processed, skipping`
       );
     }

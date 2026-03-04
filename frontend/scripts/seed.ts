@@ -30,30 +30,34 @@ async function seed() {
   await mongoose.connect(MONGODB_URI!);
   console.log("Connected to MongoDB");
 
-  for (const wine of wines) {
-    await Wine.findOneAndUpdate(
-      { slug: wine.id },
-      {
-        slug: wine.id,
-        name: wine.name,
-        nameHe: wine.nameHe,
-        winery: wine.winery,
-        region: wine.region,
-        country: wine.country,
-        type: wine.type,
-        grape: wine.grape,
-        year: wine.year,
-        description: wine.description,
-        image: wine.image,
-        featured: wine.featured ?? false,
-        $setOnInsert: { priceAgorot: 0, stock: 10 },
+  const ops = wines.map((wine) => ({
+    updateOne: {
+      filter: { slug: wine.slug },
+      update: {
+        $set: {
+          slug: wine.slug,
+          name: wine.name,
+          nameHe: wine.nameHe,
+          winery: wine.winery,
+          region: wine.region,
+          country: wine.country,
+          type: wine.type,
+          grape: wine.grape,
+          year: wine.year,
+          description: wine.description,
+          image: wine.image,
+          featured: wine.featured ?? false,
+        },
+        $setOnInsert: { priceAgorot: 9900, stock: 10 },
       },
-      { upsert: true, new: true }
-    );
-    console.log(`Upserted: ${wine.name} (${wine.id})`);
-  }
+      upsert: true,
+    },
+  }));
 
-  console.log("Seed complete!");
+  const result = await Wine.bulkWrite(ops);
+  console.log(
+    `Seed complete! Inserted: ${result.upsertedCount}, Modified: ${result.modifiedCount}`
+  );
   await mongoose.disconnect();
 }
 

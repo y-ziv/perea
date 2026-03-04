@@ -1,4 +1,3 @@
-import Link from "next/link";
 import Image from "next/image";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { Button } from "@/components/ui/Button";

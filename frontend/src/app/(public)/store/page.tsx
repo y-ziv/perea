@@ -9,7 +9,7 @@ export const metadata: Metadata = {
     "יינות בוטיק מהגליל וצפון יוון – קסינומאברו, מלגוזיה, סירה, אסירטיקו ועוד. יינות שמספרים סיפור של מקום.",
 };
 
-export const dynamic = "force-dynamic";
+export const revalidate = 60;
 
 export default async function WinePage() {
   const wines = await getAllWines();
@@ -25,23 +25,29 @@ export default async function WinePage() {
           className="mb-6 sm:mb-10"
         />
 
-        <div className="grid gap-8 sm:grid-cols-2 sm:gap-10 lg:grid-cols-3">
-          {wines.map((wine) => (
-            <WineCard
-              key={wine.slug}
-              slug={wine.slug}
-              name={wine.name}
-              winery={wine.winery}
-              country={wine.country}
-              grape={wine.grape}
-              year={wine.year}
-              description={wine.description}
-              image={wine.image}
-              priceAgorot={wine.priceAgorot}
-              stock={wine.stock}
-            />
-          ))}
-        </div>
+        {wines.length === 0 ? (
+          <p className="py-12 text-center text-body text-cream-muted">
+            אין יינות זמינים כרגע. בקרו שוב בקרוב!
+          </p>
+        ) : (
+          <div className="grid gap-8 sm:grid-cols-2 sm:gap-10 lg:grid-cols-3">
+            {wines.map((wine) => (
+              <WineCard
+                key={wine.slug}
+                slug={wine.slug}
+                name={wine.name}
+                winery={wine.winery}
+                country={wine.country}
+                grape={wine.grape}
+                year={wine.year}
+                description={wine.description}
+                image={wine.image}
+                priceAgorot={wine.priceAgorot}
+                stock={wine.stock}
+              />
+            ))}
+          </div>
+        )}
       </div>
     </section>
   );

@@ -11,6 +11,7 @@ export interface IWine extends Document {
   grape: string;
   year?: number;
   description: string;
+  descriptionHe?: string;
   image: string;
   featured: boolean;
   priceAgorot: number;
@@ -19,7 +20,7 @@ export interface IWine extends Document {
 
 const WineSchema = new Schema<IWine>(
   {
-    slug: { type: String, required: true, unique: true, index: true },
+    slug: { type: String, required: true, unique: true },
     name: { type: String, required: true },
     nameHe: { type: String },
     winery: { type: String, required: true },
@@ -31,8 +32,9 @@ const WineSchema = new Schema<IWine>(
     country: { type: String, required: true, enum: ["Israel", "Greece"] },
     type: { type: String, required: true, enum: ["red", "white", "rosé", "orange"] },
     grape: { type: String, required: true },
-    year: { type: Number },
+    year: { type: Number, min: 1900, max: 2100 },
     description: { type: String, required: true },
+    descriptionHe: { type: String },
     image: { type: String, required: true },
     featured: { type: Boolean, default: false },
     priceAgorot: { type: Number, required: true, min: 0 },
@@ -42,4 +44,5 @@ const WineSchema = new Schema<IWine>(
 );
 
 export const Wine =
-  mongoose.models.Wine || mongoose.model<IWine>("Wine", WineSchema);
+  (mongoose.models.Wine as mongoose.Model<IWine>) ||
+  mongoose.model<IWine>("Wine", WineSchema);

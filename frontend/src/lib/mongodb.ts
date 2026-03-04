@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import { env } from "./env";
 
 interface MongooseCache {
   conn: typeof mongoose | null;
@@ -22,15 +23,15 @@ if (!global.mongooseCache) {
 export async function connectDB() {
   if (cached.conn) return cached.conn;
 
-  const uri = process.env.MONGODB_URI;
-  if (!uri) {
-    throw new Error("Please define the MONGODB_URI environment variable");
-  }
+  const uri = env.MONGODB_URI;
 
   if (!cached.promise) {
-    cached.promise = mongoose.connect(uri, {
-      bufferCommands: false,
-    });
+    cached.promise = mongoose
+      .connect(uri, { bufferCommands: false })
+      .catch((err) => {
+        cached.promise = null;
+        throw err;
+      });
   }
 
   cached.conn = await cached.promise;

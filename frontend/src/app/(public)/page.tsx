@@ -4,7 +4,7 @@ import { Experience } from "@/components/sections/Experience";
 import { FeaturedWinesSection } from "@/components/sections/FeaturedWinesSection";
 import { VisitCTA } from "@/components/sections/VisitCTA";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 60;
 
 export default function Home() {
   return (

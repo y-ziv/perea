@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter, useSearchParams } from "next/navigation";
-import { useRef, useState, useCallback } from "react";
+import { useRef, useState, useCallback, useEffect } from "react";
 
 export function OrderSearch() {
   const router = useRouter();
@@ -22,6 +22,10 @@ export function OrderSearch() {
     [searchParams, router]
   );
 
+  useEffect(() => {
+    return () => clearTimeout(timerRef.current);
+  }, []);
+
   function handleChange(value: string) {
     setQuery(value);
     clearTimeout(timerRef.current);
@@ -30,10 +34,11 @@ export function OrderSearch() {
 
   return (
     <input
-      type="text"
+      type="search"
       value={query}
       onChange={(e) => handleChange(e.target.value)}
       placeholder="חיפוש לפי שם, טלפון או מזהה..."
+      aria-label="חיפוש הזמנות"
       className="w-64 rounded border border-warm bg-primary px-3 py-2 text-body text-cream placeholder:text-cream-muted focus:border-copper focus:outline-none"
     />
   );

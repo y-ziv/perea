@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 import { ImageUpload } from "./ImageUpload";
 
 interface WineFormData {
@@ -15,6 +16,7 @@ interface WineFormData {
   grape: string;
   year: string;
   description: string;
+  descriptionHe: string;
   image: string;
   featured: boolean;
   priceAgorot: number;
@@ -40,6 +42,7 @@ export function WineForm({ initialData, mode }: WineFormProps) {
     grape: initialData?.grape ?? "",
     year: initialData?.year ?? "",
     description: initialData?.description ?? "",
+    descriptionHe: initialData?.descriptionHe ?? "",
     image: initialData?.image ?? "",
     featured: initialData?.featured ?? false,
     priceAgorot: initialData?.priceAgorot ?? 0,
@@ -83,10 +86,9 @@ export function WineForm({ initialData, mode }: WineFormProps) {
       }
 
       router.push("/admin/wines");
-      router.refresh();
     } catch (err) {
       console.error("Save error:", err);
-      alert("שגיאה בשמירה");
+      toast.error(err instanceof Error ? err.message : "שגיאה בשמירה");
       setSaving(false);
     }
   }
@@ -99,8 +101,9 @@ export function WineForm({ initialData, mode }: WineFormProps) {
     <form onSubmit={handleSubmit} className="max-w-2xl space-y-6">
       <div className="grid grid-cols-2 gap-4">
         <div>
-          <label className={labelClass}>Slug (מזהה ייחודי)</label>
+          <label htmlFor="wine-slug" className={labelClass}>Slug (מזהה ייחודי)</label>
           <input
+            id="wine-slug"
             className={inputClass}
             value={form.slug}
             onChange={(e) => updateField("slug", e.target.value)}
@@ -109,8 +112,9 @@ export function WineForm({ initialData, mode }: WineFormProps) {
           />
         </div>
         <div>
-          <label className={labelClass}>שם</label>
+          <label htmlFor="wine-name" className={labelClass}>שם</label>
           <input
+            id="wine-name"
             className={inputClass}
             value={form.name}
             onChange={(e) => updateField("name", e.target.value)}
@@ -121,16 +125,18 @@ export function WineForm({ initialData, mode }: WineFormProps) {
 
       <div className="grid grid-cols-2 gap-4">
         <div>
-          <label className={labelClass}>שם בעברית</label>
+          <label htmlFor="wine-nameHe" className={labelClass}>שם בעברית</label>
           <input
+            id="wine-nameHe"
             className={inputClass}
             value={form.nameHe}
             onChange={(e) => updateField("nameHe", e.target.value)}
           />
         </div>
         <div>
-          <label className={labelClass}>יקב</label>
+          <label htmlFor="wine-winery" className={labelClass}>יקב</label>
           <input
+            id="wine-winery"
             className={inputClass}
             value={form.winery}
             onChange={(e) => updateField("winery", e.target.value)}
@@ -141,8 +147,9 @@ export function WineForm({ initialData, mode }: WineFormProps) {
 
       <div className="grid grid-cols-3 gap-4">
         <div>
-          <label className={labelClass}>אזור</label>
+          <label htmlFor="wine-region" className={labelClass}>אזור</label>
           <select
+            id="wine-region"
             className={inputClass}
             value={form.region}
             onChange={(e) => updateField("region", e.target.value)}
@@ -152,8 +159,9 @@ export function WineForm({ initialData, mode }: WineFormProps) {
           </select>
         </div>
         <div>
-          <label className={labelClass}>מדינה</label>
+          <label htmlFor="wine-country" className={labelClass}>מדינה</label>
           <select
+            id="wine-country"
             className={inputClass}
             value={form.country}
             onChange={(e) => updateField("country", e.target.value)}
@@ -163,8 +171,9 @@ export function WineForm({ initialData, mode }: WineFormProps) {
           </select>
         </div>
         <div>
-          <label className={labelClass}>סוג</label>
+          <label htmlFor="wine-type" className={labelClass}>סוג</label>
           <select
+            id="wine-type"
             className={inputClass}
             value={form.type}
             onChange={(e) => updateField("type", e.target.value)}
@@ -179,8 +188,9 @@ export function WineForm({ initialData, mode }: WineFormProps) {
 
       <div className="grid grid-cols-2 gap-4">
         <div>
-          <label className={labelClass}>זן ענבים</label>
+          <label htmlFor="wine-grape" className={labelClass}>זן ענבים</label>
           <input
+            id="wine-grape"
             className={inputClass}
             value={form.grape}
             onChange={(e) => updateField("grape", e.target.value)}
@@ -188,8 +198,9 @@ export function WineForm({ initialData, mode }: WineFormProps) {
           />
         </div>
         <div>
-          <label className={labelClass}>שנה</label>
+          <label htmlFor="wine-year" className={labelClass}>שנה</label>
           <input
+            id="wine-year"
             className={inputClass}
             type="number"
             value={form.year}
@@ -199,12 +210,23 @@ export function WineForm({ initialData, mode }: WineFormProps) {
       </div>
 
       <div>
-        <label className={labelClass}>תיאור</label>
+        <label htmlFor="wine-description" className={labelClass}>תיאור</label>
         <textarea
+          id="wine-description"
           className={`${inputClass} h-24 resize-none`}
           value={form.description}
           onChange={(e) => updateField("description", e.target.value)}
           required
+        />
+      </div>
+
+      <div>
+        <label htmlFor="wine-descriptionHe" className={labelClass}>תיאור בעברית</label>
+        <textarea
+          id="wine-descriptionHe"
+          className={`${inputClass} h-24 resize-none`}
+          value={form.descriptionHe}
+          onChange={(e) => updateField("descriptionHe", e.target.value)}
         />
       </div>
 
@@ -218,8 +240,9 @@ export function WineForm({ initialData, mode }: WineFormProps) {
 
       <div className="grid grid-cols-2 gap-4">
         <div>
-          <label className={labelClass}>מחיר (₪{priceILS})</label>
+          <label htmlFor="wine-price" className={labelClass}>מחיר (₪{priceILS})</label>
           <input
+            id="wine-price"
             className={inputClass}
             type="number"
             min="0"
@@ -232,8 +255,9 @@ export function WineForm({ initialData, mode }: WineFormProps) {
           <p className="mt-1 text-xs text-cream-muted">באגורות (18900 = ₪189.00)</p>
         </div>
         <div>
-          <label className={labelClass}>מלאי</label>
+          <label htmlFor="wine-stock" className={labelClass}>מלאי</label>
           <input
+            id="wine-stock"
             className={inputClass}
             type="number"
             min="0"
@@ -254,7 +278,7 @@ export function WineForm({ initialData, mode }: WineFormProps) {
         </button>
         <button
           type="button"
-          onClick={() => router.back()}
+          onClick={() => router.push("/admin/wines")}
           className="border border-warm px-6 py-2 text-caption text-cream-muted transition-colors hover:bg-secondary"
         >
           ביטול

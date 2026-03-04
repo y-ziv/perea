@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import { SectionHeading } from "@/components/ui/SectionHeading";
-import { Divider } from "@/components/ui/Divider";
 
 export const metadata: Metadata = {
   title: "הסיפור שלנו",

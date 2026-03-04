@@ -1,7 +1,7 @@
 import { connectDB } from "@/lib/mongodb";
 import { Wine } from "@/models/Wine";
 import { WineForm } from "@/components/admin/WineForm";
-import { DeleteWineButton } from "@/components/admin/DeleteWineButton";
+import { DeleteButton } from "@/components/admin/DeleteButton";
 import { notFound } from "next/navigation";
 
 export default async function EditWinePage({
@@ -26,6 +26,7 @@ export default async function EditWinePage({
     grape: wine.grape,
     year: wine.year ? String(wine.year) : "",
     description: wine.description,
+    descriptionHe: wine.descriptionHe ?? "",
     image: wine.image,
     featured: wine.featured,
     priceAgorot: wine.priceAgorot,
@@ -38,7 +39,11 @@ export default async function EditWinePage({
         <h1 className="font-heading-secondary text-h3 text-copper">
           עריכת {wine.name}
         </h1>
-        <DeleteWineButton slug={wine.slug} />
+        <DeleteButton
+          endpoint={`/api/admin/wines/${wine.slug}`}
+          confirmMessage={`למחוק את ${wine.name}?`}
+          redirectTo="/admin/wines"
+        />
       </div>
       <div className="mt-8">
         <WineForm initialData={initialData} mode="edit" />

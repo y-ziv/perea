@@ -1,10 +1,12 @@
 import type { Wine } from "@/types";
 
+type SeedWine = Omit<Wine, "_id" | "priceAgorot" | "stock" | "featured"> & { featured?: boolean };
+
 const IMG = "/drive-download-20260209T114257Z-1-001";
 
-export const wines: Wine[] = [
+export const wines: SeedWine[] = [
   {
-    id: "ktima-alpha-xinomavro",
+    slug:"ktima-alpha-xinomavro",
     name: "קסינומאברו רזרב",
     nameHe: "קסינומאברו רזרב",
     winery: "Ktima Alpha",
@@ -19,7 +21,7 @@ export const wines: Wine[] = [
     featured: true,
   },
   {
-    id: "galilee-heights-syrah",
+    slug:"galilee-heights-syrah",
     name: "סירה גליל",
     nameHe: "סירה גליל",
     winery: "Galilee Heights",
@@ -34,7 +36,7 @@ export const wines: Wine[] = [
     featured: true,
   },
   {
-    id: "domaine-gerovassiliou-malagousia",
+    slug:"domaine-gerovassiliou-malagousia",
     name: "מלגוזיה",
     nameHe: "מלגוזיה",
     winery: "Domaine Gerovassiliou",
@@ -49,7 +51,7 @@ export const wines: Wine[] = [
     featured: true,
   },
   {
-    id: "galilee-cabernet",
+    slug:"galilee-cabernet",
     name: "קברנה סוביניון גליל",
     winery: "יקב הגליל",
     region: "galilee",
@@ -62,7 +64,7 @@ export const wines: Wine[] = [
     image: `${IMG}/0Y1A2196 copy.jpg`,
   },
   {
-    id: "naoussa-xinomavro",
+    slug:"naoussa-xinomavro",
     name: "קסינומאברו נאוסה",
     winery: "Boutari",
     region: "northern-greece",
@@ -75,7 +77,7 @@ export const wines: Wine[] = [
     image: `${IMG}/0Y1A2199 copy.jpg`,
   },
   {
-    id: "assyrtiko-thessaloniki",
+    slug:"assyrtiko-thessaloniki",
     name: "אסירטיקו",
     winery: "Ktima Gerovassiliou",
     region: "northern-greece",
@@ -88,7 +90,7 @@ export const wines: Wine[] = [
     image: `${IMG}/0Y1A2200 copy.jpg`,
   },
   {
-    id: "galilee-rose",
+    slug:"galilee-rose",
     name: "רוזה גלילי",
     winery: "יקב הגליל",
     region: "galilee",
@@ -101,7 +103,7 @@ export const wines: Wine[] = [
     image: `${IMG}/0Y1A2200-2 copy.jpg`,
   },
   {
-    id: "agiorgitiko-nemea",
+    slug:"agiorgitiko-nemea",
     name: "אגיורגיטיקו",
     winery: "Skouras",
     region: "northern-greece",

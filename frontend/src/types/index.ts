@@ -1,21 +1,24 @@
+export type OrderStatus = "PENDING" | "PAID" | "FAILED";
+export type DeliveryMethod = "pickup" | "shipping";
+export type WineType = "red" | "white" | "rosé" | "orange";
+export type WineRegion = "galilee" | "northern-greece";
+export type WineCountry = "Israel" | "Greece";
+
 export interface Wine {
-  id: string;
+  _id: string;
+  slug: string;
   name: string;
   nameHe?: string;
   winery: string;
-  region: "galilee" | "northern-greece";
-  country: "Israel" | "Greece";
-  type: "red" | "white" | "rosé" | "orange";
+  region: WineRegion;
+  country: WineCountry;
+  type: WineType;
   grape: string;
   year?: number;
   description: string;
+  descriptionHe?: string;
   image: string;
-  featured?: boolean;
-}
-
-export interface WineWithPrice extends Wine {
-  _id: string;
-  slug: string;
+  featured: boolean;
   priceAgorot: number;
   stock: number;
 }
@@ -26,6 +29,7 @@ export interface CartItem {
   name: string;
   priceAgorot: number;
   image: string;
+  stock: number;
 }
 
 export interface WineEvent {

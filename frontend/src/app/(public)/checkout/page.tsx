@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useCart } from "@/context/CartContext";
 import { formatPrice } from "@/lib/format";
 import Image from "next/image";
+import Link from "next/link";
 
 export default function CheckoutPage() {
   const { items, totalAgorot } = useCart();
@@ -44,6 +45,11 @@ export default function CheckoutPage() {
           return "יש להזין מספר טלפון ישראלי תקין (10 ספרות)";
         return null;
       }
+      case "email": {
+        if (!/^\S+@\S+\.\S+$/.test(formState.email))
+          return "יש להזין כתובת אימייל תקינה";
+        return null;
+      }
       case "address": {
         if (formState.deliveryMethod === "shipping" && !formState.address.trim())
           return "יש להזין כתובת למשלוח";
@@ -63,7 +69,7 @@ export default function CheckoutPage() {
 
   function validate(): Record<string, string> {
     const errors: Record<string, string> = {};
-    for (const key of ["name", "phone", "address"]) {
+    for (const key of ["name", "phone", "email", "address"]) {
       const error = validateField(key);
       if (error) errors[key] = error;
     }
@@ -129,6 +135,12 @@ export default function CheckoutPage() {
           <p className="mt-4 text-body text-cream-muted">
             אין פריטים בעגלה. חזרו לחנות כדי להוסיף יינות.
           </p>
+          <Link
+            href="/store"
+            className="mt-8 inline-block border border-copper px-8 py-3 text-caption font-medium text-copper transition-colors hover:bg-copper hover:text-primary"
+          >
+            חזרה לחנות
+          </Link>
         </div>
       </section>
     );
@@ -148,10 +160,11 @@ export default function CheckoutPage() {
             className="space-y-6 lg:col-span-3"
           >
             <div>
-              <label className="mb-1 block text-caption font-medium text-cream-muted">
+              <label htmlFor="checkout-name" className="mb-1 block text-caption font-medium text-cream-muted">
                 שם מלא *
               </label>
               <input
+                id="checkout-name"
                 className={`${inputClass} ${fieldErrors.name ? "border-red-500" : ""}`}
                 value={form.name}
                 onChange={(e) => updateField("name", e.target.value)}
@@ -159,16 +172,17 @@ export default function CheckoutPage() {
                 required
               />
               {fieldErrors.name && (
-                <p className="mt-1 text-xs text-red-400">{fieldErrors.name}</p>
+                <p role="alert" className="mt-1 text-xs text-red-400">{fieldErrors.name}</p>
               )}
             </div>
 
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <label className="mb-1 block text-caption font-medium text-cream-muted">
+                <label htmlFor="checkout-phone" className="mb-1 block text-caption font-medium text-cream-muted">
                   טלפון *
                 </label>
                 <input
+                  id="checkout-phone"
                   className={`${inputClass} ${fieldErrors.phone ? "border-red-500" : ""}`}
                   type="tel"
                   value={form.phone}
@@ -177,20 +191,25 @@ export default function CheckoutPage() {
                   required
                 />
                 {fieldErrors.phone && (
-                  <p className="mt-1 text-xs text-red-400">{fieldErrors.phone}</p>
+                  <p role="alert" className="mt-1 text-xs text-red-400">{fieldErrors.phone}</p>
                 )}
               </div>
               <div>
-                <label className="mb-1 block text-caption font-medium text-cream-muted">
+                <label htmlFor="checkout-email" className="mb-1 block text-caption font-medium text-cream-muted">
                   אימייל *
                 </label>
                 <input
-                  className={inputClass}
+                  id="checkout-email"
+                  className={`${inputClass} ${fieldErrors.email ? "border-red-500" : ""}`}
                   type="email"
                   value={form.email}
                   onChange={(e) => updateField("email", e.target.value)}
+                  onBlur={() => handleBlur("email")}
                   required
                 />
+                {fieldErrors.email && (
+                  <p role="alert" className="mt-1 text-xs text-red-400">{fieldErrors.email}</p>
+                )}
               </div>
             </div>
 
@@ -226,10 +245,11 @@ export default function CheckoutPage() {
 
             {form.deliveryMethod === "shipping" && (
               <div>
-                <label className="mb-1 block text-caption font-medium text-cream-muted">
+                <label htmlFor="checkout-address" className="mb-1 block text-caption font-medium text-cream-muted">
                   כתובת למשלוח *
                 </label>
                 <input
+                  id="checkout-address"
                   className={`${inputClass} ${fieldErrors.address ? "border-red-500" : ""}`}
                   value={form.address}
                   onChange={(e) => updateField("address", e.target.value)}
@@ -238,16 +258,17 @@ export default function CheckoutPage() {
                   required
                 />
                 {fieldErrors.address && (
-                  <p className="mt-1 text-xs text-red-400">{fieldErrors.address}</p>
+                  <p role="alert" className="mt-1 text-xs text-red-400">{fieldErrors.address}</p>
                 )}
               </div>
             )}
 
             <div>
-              <label className="mb-1 block text-caption font-medium text-cream-muted">
+              <label htmlFor="checkout-notes" className="mb-1 block text-caption font-medium text-cream-muted">
                 הערות
               </label>
               <textarea
+                id="checkout-notes"
                 className={`${inputClass} h-20 resize-none`}
                 value={form.notes}
                 onChange={(e) => updateField("notes", e.target.value)}
@@ -255,7 +276,7 @@ export default function CheckoutPage() {
             </div>
 
             {error && (
-              <p className="text-body text-red-500">{error}</p>
+              <p role="alert" className="text-body text-red-500">{error}</p>
             )}
 
             <button

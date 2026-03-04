@@ -26,6 +26,7 @@ function WineCard({ wine }: { wine: FeaturedWine }) {
           src={wine.image}
           alt={wine.name}
           fill
+          sizes="(max-width: 640px) 75vw, (max-width: 1024px) 45vw, 30vw"
           className="object-contain p-2 transition-transform duration-500 group-hover:scale-105"
         />
       </div>
@@ -93,6 +94,7 @@ export function FeaturedWinesClient({ wines }: { wines: FeaturedWine[] }) {
 
         <div className="mt-8 flex items-center justify-center gap-6">
           <button
+            type="button"
             onClick={() => scroll(1)}
             aria-label="הקודם"
             className="flex items-center justify-center rounded-full border border-copper/30 bg-primary/80 p-3 text-copper transition-all duration-300 hover:border-copper hover:bg-primary"
@@ -114,6 +116,7 @@ export function FeaturedWinesClient({ wines }: { wines: FeaturedWine[] }) {
           </button>
 
           <button
+            type="button"
             onClick={() => scroll(-1)}
             aria-label="הבא"
             className="flex items-center justify-center rounded-full border border-copper/30 bg-primary/80 p-3 text-copper transition-all duration-300 hover:border-copper hover:bg-primary"

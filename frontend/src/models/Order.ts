@@ -24,6 +24,8 @@ export interface IOrder extends Document {
   lowProfileCode?: string;
   cardcomTransactionId?: string;
   paymentVerifiedAt?: Date;
+  createdAt: Date;
+  updatedAt: Date;
 }
 
 const OrderItemSchema = new Schema<IOrderItem>(
@@ -31,27 +33,38 @@ const OrderItemSchema = new Schema<IOrderItem>(
     wineId: { type: Schema.Types.ObjectId, required: true, ref: "Wine" },
     wineSlug: { type: String, required: true },
     name: { type: String, required: true },
-    priceAgorot: { type: Number, required: true },
-    quantity: { type: Number, required: true, min: 1 },
+    priceAgorot: { type: Number, required: true, min: 0 },
+    quantity: { type: Number, required: true, min: 1, max: 10000 },
   },
   { _id: false }
 );
 
 const OrderSchema = new Schema<IOrder>(
   {
-    orderId: { type: String, required: true, unique: true, index: true },
+    orderId: { type: String, required: true, unique: true },
     status: {
       type: String,
       required: true,
       enum: ["PENDING", "PAID", "FAILED"],
       default: "PENDING",
     },
-    items: { type: [OrderItemSchema], required: true },
+    items: {
+      type: [OrderItemSchema],
+      required: true,
+      validate: {
+        validator: (v: IOrderItem[]) => v.length > 0,
+        message: "Order must have at least one item",
+      },
+    },
     totalAgorot: { type: Number, required: true, min: 0 },
     customer: {
       name: { type: String, required: true },
       phone: { type: String, required: true },
-      email: { type: String, required: true },
+      email: {
+        type: String,
+        required: true,
+        match: [/^\S+@\S+\.\S+$/, "Invalid email format"],
+      },
       address: { type: String },
       notes: { type: String },
     },
@@ -68,4 +81,5 @@ const OrderSchema = new Schema<IOrder>(
 );
 
 export const Order =
-  mongoose.models.Order || mongoose.model<IOrder>("Order", OrderSchema);
+  (mongoose.models.Order as mongoose.Model<IOrder>) ||
+  mongoose.model<IOrder>("Order", OrderSchema);

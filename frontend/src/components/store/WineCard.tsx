@@ -17,6 +17,11 @@ interface WineCardProps {
   stock: number;
 }
 
+const COUNTRY_NAMES: Record<string, string> = {
+  Greece: "יוון",
+  Israel: "ישראל",
+};
+
 export function WineCard(wine: WineCardProps) {
   const { addItem } = useCart();
 
@@ -31,6 +36,7 @@ export function WineCard(wine: WineCardProps) {
       name: wine.name,
       priceAgorot: wine.priceAgorot,
       image: wine.image,
+      stock: wine.stock,
     });
   }
 
@@ -41,12 +47,12 @@ export function WineCard(wine: WineCardProps) {
           src={wine.image}
           alt={wine.name}
           fill
-          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
+          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
           className="object-cover transition-transform duration-500 group-hover:scale-105"
         />
       </div>
       <p className="overline mb-1">
-        {wine.country === "Greece" ? "יוון" : "ישראל"} · {wine.grape}
+        {COUNTRY_NAMES[wine.country] || wine.country} · {wine.grape}
       </p>
       <h3 className="font-sans text-body-lg font-medium text-cream sm:text-h4">
         {wine.name}
@@ -64,8 +70,10 @@ export function WineCard(wine: WineCardProps) {
       </p>
       {!noPrice && (
         <button
+          type="button"
           onClick={handleAdd}
           disabled={outOfStock}
+          aria-label={outOfStock ? `${wine.name} אזל מהמלאי` : `הוסף ${wine.name} לעגלה`}
           className="mt-3 border border-copper px-6 py-2 text-caption font-medium text-copper transition-colors hover:bg-copper hover:text-primary disabled:cursor-not-allowed disabled:opacity-40"
         >
           {outOfStock ? "אזל מהמלאי" : "הוספה לעגלה"}

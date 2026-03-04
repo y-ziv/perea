@@ -63,9 +63,6 @@ export function Hero() {
             <h1 className="font-handwritten text-h2 font-normal tracking-widest text-copper drop-shadow-sm md:text-h2">
               פראה - בר וחנות יין משפחתית
             </h1>
-            {/* <p className="font-heading-secondary text-h3 font-light tracking-wide text-white drop-shadow-sm md:text-h2">
-              שתי ארצות. כוס אחת.
-            </p> */}
           </div>
         </motion.div>
       </div>

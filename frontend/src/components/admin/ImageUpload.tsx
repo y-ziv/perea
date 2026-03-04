@@ -2,6 +2,7 @@
 
 import { useState, useRef } from "react";
 import Image from "next/image";
+import { toast } from "sonner";
 
 interface ImageUploadProps {
   value: string;
@@ -15,6 +16,12 @@ export function ImageUpload({ value, onChange }: ImageUploadProps) {
   async function handleUpload(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];
     if (!file) return;
+
+    const MAX_SIZE = 5 * 1024 * 1024; // 5MB
+    if (file.size > MAX_SIZE) {
+      toast.error("הקובץ גדול מדי. גודל מקסימלי: 5MB");
+      return;
+    }
 
     setUploading(true);
     try {
@@ -32,7 +39,7 @@ export function ImageUpload({ value, onChange }: ImageUploadProps) {
       onChange(data.url);
     } catch (err) {
       console.error("Upload error:", err);
-      alert("שגיאה בהעלאת התמונה");
+      toast.error("שגיאה בהעלאת התמונה");
     } finally {
       setUploading(false);
     }

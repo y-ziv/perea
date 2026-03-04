@@ -15,6 +15,7 @@ export function CartItemRow({ item }: { item: CartItem }) {
           src={item.image}
           alt={item.name}
           fill
+          sizes="64px"
           className="object-contain p-1"
         />
       </div>
@@ -25,21 +26,28 @@ export function CartItemRow({ item }: { item: CartItem }) {
         </p>
         <div className="mt-1 flex items-center gap-2">
           <button
+            type="button"
             onClick={() => updateQuantity(item.wineSlug, item.quantity - 1)}
-            className="flex h-6 w-6 items-center justify-center border border-warm text-caption text-cream-muted hover:border-copper"
+            disabled={item.quantity <= 1}
+            className="flex h-6 w-6 items-center justify-center border border-warm text-caption text-cream-muted hover:border-copper disabled:opacity-30"
+            aria-label="הפחת כמות"
           >
             -
           </button>
-          <span className="min-w-[1.5rem] text-center text-caption text-cream">
+          <span className="min-w-6 text-center text-caption text-cream">
             {item.quantity}
           </span>
           <button
+            type="button"
             onClick={() => updateQuantity(item.wineSlug, item.quantity + 1)}
-            className="flex h-6 w-6 items-center justify-center border border-warm text-caption text-cream-muted hover:border-copper"
+            disabled={item.quantity >= item.stock}
+            className="flex h-6 w-6 items-center justify-center border border-warm text-caption text-cream-muted hover:border-copper disabled:opacity-30"
+            aria-label="הוסף כמות"
           >
             +
           </button>
           <button
+            type="button"
             onClick={() => removeItem(item.wineSlug)}
             className="mr-auto text-caption text-cream-muted hover:text-red-500"
             aria-label="הסר פריט"

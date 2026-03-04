@@ -1,4 +1,7 @@
+import { env } from "@/lib/env";
+
 const CARDCOM_API = "https://secure.cardcom.solutions/api/v11";
+const FETCH_TIMEOUT_MS = 15_000;
 
 interface ProductLine {
   description: string;
@@ -22,17 +25,27 @@ interface LowProfileCreateResponse {
   lowProfileCode: string;
 }
 
+function agorotToShekel(agorot: number): number {
+  return Math.round(agorot) / 100;
+}
+
+function fetchWithTimeout(url: string, options: RequestInit): Promise<Response> {
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), FETCH_TIMEOUT_MS);
+  return fetch(url, { ...options, signal: controller.signal }).finally(() =>
+    clearTimeout(timeout)
+  );
+}
+
 export async function createLowProfile(
   params: LowProfileCreateParams
 ): Promise<LowProfileCreateResponse> {
-  const amount = Number((params.totalAgorot / 100).toFixed(2));
-
   const body = {
-    TerminalNumber: Number(process.env.CARDCOM_TERMINAL_NUMBER) || 1000,
-    ApiName: process.env.CARDCOM_API_NAME || "",
-    ApiPassword: process.env.CARDCOM_API_PASSWORD || "",
-    Amount: amount,
-    CoinID: 1, // ILS
+    TerminalNumber: Number(env.CARDCOM_TERMINAL_NUMBER),
+    ApiName: env.CARDCOM_API_NAME,
+    ApiPassword: env.CARDCOM_API_PASSWORD,
+    Amount: agorotToShekel(params.totalAgorot),
+    CoinID: 1,
     Language: "he",
     Operation: "ChargeOnly",
     ReturnValue: params.orderId,
@@ -44,13 +57,13 @@ export async function createLowProfile(
       Email: params.customerEmail,
       Products: params.products.map((p) => ({
         Description: p.description,
-        UnitCost: Number((p.priceAgorot / 100).toFixed(2)),
+        UnitCost: agorotToShekel(p.priceAgorot),
         Quantity: p.quantity,
       })),
     },
   };
 
-  const res = await fetch(`${CARDCOM_API}/LowProfile/Create`, {
+  const res = await fetchWithTimeout(`${CARDCOM_API}/LowProfile/Create`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(body),
@@ -70,35 +83,55 @@ export async function createLowProfile(
   };
 }
 
-interface LpResult {
+export interface LpResult {
   approved: boolean;
   cardcomTransactionId: string;
   returnValue: string;
-  sumBilled: number; // in ILS
+  sumBilled: number;
 }
 
 export async function getLowProfileResult(
   lowProfileCode: string
 ): Promise<LpResult> {
   const body = {
-    TerminalNumber: Number(process.env.CARDCOM_TERMINAL_NUMBER) || 1000,
-    ApiName: process.env.CARDCOM_API_NAME || "",
-    ApiPassword: process.env.CARDCOM_API_PASSWORD || "",
+    TerminalNumber: Number(env.CARDCOM_TERMINAL_NUMBER),
+    ApiName: env.CARDCOM_API_NAME,
+    ApiPassword: env.CARDCOM_API_PASSWORD,
     LowProfileCode: lowProfileCode,
   };
 
-  const res = await fetch(`${CARDCOM_API}/LowProfile/GetLpResult`, {
+  const res = await fetchWithTimeout(`${CARDCOM_API}/LowProfile/GetLpResult`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(body),
   });
 
+  if (!res.ok) {
+    throw new Error(`Cardcom GetLpResult HTTP error: ${res.status}`);
+  }
+
   const data = await res.json();
 
+  // Log full response for debugging — Cardcom fields can vary between
+  // test terminal (1000) and production, and between API versions.
+  console.info("Cardcom GetLpResult response:", JSON.stringify(data));
+
+  // Cardcom v11 returns DealResponse=0 for approved deals.
+  // Use loose equality (==) because Cardcom may return string "0" or number 0.
+  // Also check ResponseCode as a fallback — some terminal configs use it instead.
+  const dealResponse = data.DealResponse ?? data.dealResponse;
+  const responseCode = data.ResponseCode ?? data.responseCode;
+
+  const approved =
+    // eslint-disable-next-line eqeqeq
+    dealResponse == 0 ||
+    // eslint-disable-next-line eqeqeq
+    (responseCode == 0 && Number(data.InternalDealNumber || data.internalDealNumber || 0) > 0);
+
   return {
-    approved: data.DealResponse === 0,
-    cardcomTransactionId: String(data.InternalDealNumber || ""),
-    returnValue: data.ReturnValue || "",
-    sumBilled: data.Amount || data.Sum || 0,
+    approved,
+    cardcomTransactionId: String(data.InternalDealNumber || data.internalDealNumber || ""),
+    returnValue: data.ReturnValue || data.returnValue || "",
+    sumBilled: data.Amount ?? data.Sum ?? data.amount ?? 0,
   };
 }

@@ -1,16 +1,21 @@
 import NextAuth from "next-auth";
 import Google from "next-auth/providers/google";
+import { env } from "@/lib/env";
 
 const allowedEmails = (process.env.ADMIN_EMAILS ?? "")
   .split(",")
   .map((e) => e.trim().toLowerCase())
   .filter(Boolean);
 
+if (allowedEmails.length === 0 && process.env.NODE_ENV === "production") {
+  console.warn("ADMIN_EMAILS is empty — no users will be able to sign in to admin");
+}
+
 export const { handlers, auth, signIn, signOut } = NextAuth({
   providers: [
     Google({
-      clientId: process.env.GOOGLE_CLIENT_ID,
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+      clientId: env.GOOGLE_CLIENT_ID,
+      clientSecret: env.GOOGLE_CLIENT_SECRET,
     }),
   ],
   session: { strategy: "jwt" },

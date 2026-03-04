@@ -43,6 +43,7 @@ export function AdminSidebar() {
       </nav>
       <div className="border-t border-warm px-3 py-4">
         <button
+          type="button"
           onClick={() => signOut({ callbackUrl: "/" })}
           className="w-full rounded px-3 py-2 text-start text-body text-cream-muted hover:bg-secondary"
         >

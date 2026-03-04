@@ -4,7 +4,7 @@ import { SectionHeading } from "@/components/ui/SectionHeading";
 import { wines } from "@/data/wines";
 
 export const metadata: Metadata = {
-  title: "היינות שלנו",
+  title: "החנות",
   description:
     "יינות בוטיק מהגליל וצפון יוון – קסינומאברו, מלגוזיה, סירה, אסירטיקו ועוד. יינות שמספרים סיפור של מקום.",
 };
@@ -14,7 +14,7 @@ export default function WinePage() {
     <section className="bg-primary pt-24 pb-14 sm:pt-32 sm:pb-20">
       <div className="mx-auto max-w-6xl px-4 sm:px-6">
         <SectionHeading
-          overline="היינות"
+          overline="החנות"
           heading="מהאוסף שלנו"
           subtitle="יינות יוונים איכותיים מיקבי בוטיק בצפון יוון שאנו מייבאים בעצמנו, לצד יינות בוטיק של ייננים חברים מהטרואר המצוין של הגליל."
           align="center"

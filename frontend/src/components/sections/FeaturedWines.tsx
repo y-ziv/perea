@@ -121,7 +121,7 @@ export function FeaturedWines() {
         </div>
 
         <div className="mt-10 text-center sm:mt-14">
-          <Button href="/wine">לכל היינות</Button>
+          <Button href="/store">לכל היינות</Button>
         </div>
       </div>
     </section>

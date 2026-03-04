@@ -40,14 +40,14 @@ export function Navigation() {
       >
         <nav className="relative flex min-h-[6rem] w-full items-center justify-between px-6 py-5">
           {/* Desktop nav — centered absolutely */}
-          <ul className="absolute left-1/2 top-1/2 hidden -translate-x-1/2 -translate-y-1/2 items-center gap-10 sm:flex">
+          <ul className="absolute left-1/2 top-1/2 hidden -translate-x-1/2 -translate-y-1/2 items-center gap-10 rounded-full bg-primary/60 px-8 py-2.5 backdrop-blur-sm sm:flex">
             {navigation.map((item) => {
               const isActive = pathname === item.href;
               return (
                 <li key={item.href}>
                   <Link
                     href={item.href}
-                    className={`group relative text-caption tracking-wide text-clay transition-all duration-300 hover:font-medium ${
+                    className={`group relative text-caption tracking-wide text-clay transition-colors duration-300 ${
                       isActive ? "font-medium" : "font-normal"
                     }`}
                   >
@@ -84,7 +84,7 @@ export function Navigation() {
           {/* Menu button — desktop only */}
           <button
             onClick={() => setMenuOpen(true)}
-            className="absolute right-6 top-1/2 hidden -translate-y-1/2 items-center gap-2 border border-copper px-5 py-2 text-caption tracking-wide text-copper transition-all duration-300 hover:bg-copper hover:text-primary sm:flex"
+            className="absolute right-6 top-1/2 hidden -translate-y-1/2 items-center gap-2 rounded-full bg-primary/60 px-5 py-2 text-caption tracking-wide text-copper backdrop-blur-sm transition-all duration-300 hover:bg-copper hover:text-primary sm:flex"
           >
             תפריט
           </button>
@@ -92,14 +92,14 @@ export function Navigation() {
           {/* Logo — aligned to the left manually via absolute positioning on desktop */}
           <Link
             href="/"
-            className="relative z-50 flex h-14 shrink-0 items-center justify-center overflow-visible sm:absolute sm:left-6 sm:top-1/2 sm:-translate-y-1/2"
+            className="relative z-50 flex h-14 shrink-0 items-center justify-center overflow-visible sm:absolute sm:left-12 sm:top-1/2 sm:-translate-y-1/2"
           >
             <Image
               src="/images/logo-warm.png"
               alt="פראה בית יין"
               width={160}
               height={160}
-              className="h-14 w-auto scale-150 origin-center sm:scale-[1.7]"
+              className="h-14 w-auto scale-[2] origin-center sm:scale-[3.5]"
               priority
             />
           </Link>

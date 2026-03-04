@@ -1,3 +1,6 @@
+"use client";
+
+import { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 
@@ -82,6 +85,72 @@ function BoldUnderline({ className = "" }: { className?: string }) {
   );
 }
 
+function MobilePhotoStack() {
+  const [order, setOrder] = useState([0, 1, 2]);
+  const [swiping, setSwiping] = useState(false);
+
+  const handleTap = () => {
+    if (swiping) return;
+    setSwiping(true);
+    // After the fly-out animation, move front card to back
+    setTimeout(() => {
+      setOrder((prev) => [...prev.slice(1), prev[0]]);
+      setSwiping(false);
+    }, 400);
+  };
+
+  // Stack layout: each card gets a fixed rotation and offset
+  const stackStyles = [
+    { rotate: 0, x: 0, y: 0, scale: 1 }, // front
+    { rotate: 3, x: 10, y: -6, scale: 0.97 }, // behind-right
+    { rotate: -2, x: -8, y: -12, scale: 0.94 }, // behind-left
+  ];
+
+  return (
+    <div className="sm:hidden">
+      <div className="relative mx-auto aspect-3/4 w-[80%]" onClick={handleTap}>
+        {order.map((photoIdx, stackPos) => {
+          const photo = photos[photoIdx];
+          const style = stackStyles[stackPos];
+          const isFront = stackPos === 0;
+
+          return (
+            <div
+              key={photo.src}
+              className="absolute inset-0 overflow-hidden rounded shadow-xl"
+              style={{
+                zIndex: photos.length - stackPos,
+                transform:
+                  swiping && isFront
+                    ? "translateX(-120%) rotate(-15deg)"
+                    : `rotate(${style.rotate}deg) translateX(${style.x}px) translateY(${style.y}px) scale(${style.scale})`,
+                opacity: swiping && isFront ? 0 : 1,
+                transition: "all 0.4s cubic-bezier(0.4, 0, 0.2, 1)",
+              }}
+            >
+              <Image src={photo.src} alt={photo.alt} fill className="object-cover" sizes="85vw" />
+            </div>
+          );
+        })}
+      </div>
+      <p className="mt-5 min-h-[3rem] text-center text-caption font-light leading-snug text-primary/70">
+        {photos[order[0]].caption}
+      </p>
+      {/* Dots */}
+      <div className="mt-2 flex justify-center gap-2">
+        {photos.map((_, i) => (
+          <div
+            key={i}
+            className={`h-2 rounded-full transition-all duration-300 ${
+              order[0] === i ? "w-4 bg-copper" : "w-2 bg-primary/30"
+            }`}
+          />
+        ))}
+      </div>
+    </div>
+  );
+}
+
 export function StoryIntro() {
   return (
     <section className="bg-cream py-16 sm:py-20">
@@ -124,33 +193,32 @@ export function StoryIntro() {
           </div>
         </div>
 
-        {/* Three photos with doodle overlay */}
+        {/* Photos */}
         <div className="relative overflow-visible">
-          <div className="grid grid-cols-1 gap-6 sm:grid-cols-3">
+          {/* Mobile: tappable carousel */}
+          <MobilePhotoStack />
+
+          {/* Desktop: 3-column grid */}
+          <div className="hidden gap-6 sm:grid sm:grid-cols-3">
             {photos.map((photo) => (
               <div key={photo.src}>
                 <div className="relative aspect-3/4 w-full overflow-hidden">
-                  <Image
-                    src={photo.src}
-                    alt={photo.alt}
-                    fill
-                    className="object-cover"
-                    sizes="(max-width: 640px) 100vw, 33vw"
-                  />
+                  <Image src={photo.src} alt={photo.alt} fill className="object-cover" sizes="33vw" />
                 </div>
                 <p className="mt-3 text-caption font-light leading-snug text-primary/70">{photo.caption}</p>
               </div>
             ))}
           </div>
 
-          {/* Doodle overlay — single image spilling left */}
-          <div className="pointer-events-none absolute inset-y-0 -left-20 w-72 sm:-left-24 sm:w-80">
+          {/* Doodle overlay — on top of photos */}
+          <div className="pointer-events-none absolute inset-y-0 left-0 z-10 w-48 sm:-left-24 sm:w-80">
             <Image
               src="/doodles/our-story-doodle4.png"
               alt=""
               width={400}
               height={800}
-              className="h-full w-full object-contain object-left brightness-0 invert"
+              className="h-full w-full object-contain object-left"
+              style={{ filter: "brightness(0) invert(1) drop-shadow(0 0 1.5px black) drop-shadow(0 0 1px black)" }}
             />
           </div>
         </div>

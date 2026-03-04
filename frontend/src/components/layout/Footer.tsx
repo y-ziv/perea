@@ -12,12 +12,12 @@ export function Footer() {
         <div className="grid grid-cols-1 gap-16 text-center md:grid-cols-3">
           {/* Column 1 — Logo + Contact + Social */}
           <div className="flex flex-col items-center gap-3">
-            <div className="relative h-24 w-60">
+            <div className="relative h-24 w-60 overflow-visible">
               <Image
                 src="/images/logo-warm.png"
                 alt="פראה בית יין"
                 fill
-                className="object-contain"
+                className="object-contain scale-[1.8] origin-center"
               />
             </div>
             <p className="text-caption text-cream-muted">

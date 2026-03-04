@@ -99,7 +99,7 @@ export function Navigation() {
               alt="פראה בית יין"
               width={160}
               height={160}
-              className="h-14 w-auto scale-[2.5] origin-center sm:scale-[3.5]"
+              className="h-14 w-auto scale-[2] origin-center sm:scale-[3.5]"
               priority
             />
           </Link>

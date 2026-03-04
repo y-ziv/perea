@@ -19,13 +19,66 @@ export default function CheckoutPage() {
     deliveryMethod: "pickup" as "pickup" | "shipping",
   });
 
+  const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
+
   function updateField(key: string, value: string) {
     setForm((prev) => ({ ...prev, [key]: value }));
+    setFieldErrors((prev) => {
+      const next = { ...prev };
+      delete next[key];
+      return next;
+    });
+  }
+
+  function validateField(key: string, formState = form): string | null {
+    switch (key) {
+      case "name": {
+        const parts = formState.name.trim().split(/\s+/);
+        if (parts.length < 2 || parts.some((p) => p.length < 2))
+          return "יש להזין שם פרטי ושם משפחה";
+        return null;
+      }
+      case "phone": {
+        const clean = formState.phone.replace(/[\s\-()]/g, "");
+        if (!/^0\d{9}$/.test(clean))
+          return "יש להזין מספר טלפון ישראלי תקין (10 ספרות)";
+        return null;
+      }
+      case "address": {
+        if (formState.deliveryMethod === "shipping" && !formState.address.trim())
+          return "יש להזין כתובת למשלוח";
+        return null;
+      }
+      default:
+        return null;
+    }
+  }
+
+  function handleBlur(key: string) {
+    const error = validateField(key);
+    if (error) {
+      setFieldErrors((prev) => ({ ...prev, [key]: error }));
+    }
+  }
+
+  function validate(): Record<string, string> {
+    const errors: Record<string, string> = {};
+    for (const key of ["name", "phone", "address"]) {
+      const error = validateField(key);
+      if (error) errors[key] = error;
+    }
+    return errors;
   }
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     if (items.length === 0) return;
+
+    const errors = validate();
+    if (Object.keys(errors).length > 0) {
+      setFieldErrors(errors);
+      return;
+    }
 
     setLoading(true);
     setError("");
@@ -99,11 +152,15 @@ export default function CheckoutPage() {
                 שם מלא *
               </label>
               <input
-                className={inputClass}
+                className={`${inputClass} ${fieldErrors.name ? "border-red-500" : ""}`}
                 value={form.name}
                 onChange={(e) => updateField("name", e.target.value)}
+                onBlur={() => handleBlur("name")}
                 required
               />
+              {fieldErrors.name && (
+                <p className="mt-1 text-xs text-red-400">{fieldErrors.name}</p>
+              )}
             </div>
 
             <div className="grid grid-cols-2 gap-4">
@@ -112,12 +169,16 @@ export default function CheckoutPage() {
                   טלפון *
                 </label>
                 <input
-                  className={inputClass}
+                  className={`${inputClass} ${fieldErrors.phone ? "border-red-500" : ""}`}
                   type="tel"
                   value={form.phone}
                   onChange={(e) => updateField("phone", e.target.value)}
+                  onBlur={() => handleBlur("phone")}
                   required
                 />
+                {fieldErrors.phone && (
+                  <p className="mt-1 text-xs text-red-400">{fieldErrors.phone}</p>
+                )}
               </div>
               <div>
                 <label className="mb-1 block text-caption font-medium text-cream-muted">
@@ -169,11 +230,16 @@ export default function CheckoutPage() {
                   כתובת למשלוח *
                 </label>
                 <input
-                  className={inputClass}
+                  className={`${inputClass} ${fieldErrors.address ? "border-red-500" : ""}`}
                   value={form.address}
                   onChange={(e) => updateField("address", e.target.value)}
+                  onBlur={() => handleBlur("address")}
+                  placeholder="עיר, רחוב ומספר"
                   required
                 />
+                {fieldErrors.address && (
+                  <p className="mt-1 text-xs text-red-400">{fieldErrors.address}</p>
+                )}
               </div>
             )}
 

@@ -3,6 +3,7 @@ import { Wine } from "@/models/Wine";
 import { formatPrice } from "@/lib/format";
 import Link from "next/link";
 import Image from "next/image";
+import { DeleteButton } from "@/components/admin/DeleteButton";
 
 export default async function AdminWinesPage() {
   await connectDB();
@@ -51,12 +52,18 @@ export default async function AdminWinesPage() {
                 </td>
                 <td className="px-4 py-3 text-body text-cream">{wine.stock}</td>
                 <td className="px-4 py-3">
-                  <Link
-                    href={`/admin/wines/${wine.slug}/edit`}
-                    className="text-caption text-copper hover:underline"
-                  >
-                    עריכה
-                  </Link>
+                  <div className="flex items-center gap-3">
+                    <Link
+                      href={`/admin/wines/${wine.slug}/edit`}
+                      className="text-caption text-copper hover:underline"
+                    >
+                      עריכה
+                    </Link>
+                    <DeleteButton
+                      endpoint={`/api/admin/wines/${wine.slug}`}
+                      confirmMessage={`למחוק את ${wine.name}?`}
+                    />
+                  </div>
                 </td>
               </tr>
             ))}

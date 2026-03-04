@@ -106,12 +106,10 @@ export default async function AdminOrdersPage({
                   {new Date(order.createdAt).toLocaleDateString("he-IL")}
                 </td>
                 <td className="px-4 py-3">
-                  {order.status !== "PAID" && (
-                    <DeleteButton
-                      endpoint={`/api/admin/orders/${order.orderId}`}
-                      confirmMessage="למחוק את ההזמנה?"
-                    />
-                  )}
+                  <DeleteButton
+                    endpoint={`/api/admin/orders/${order.orderId}`}
+                    confirmMessage="למחוק את ההזמנה?"
+                  />
                 </td>
               </tr>
             ))}

@@ -42,35 +42,19 @@ export const DELETE = withAdminAuth(async (_request, { params }) => {
       return NextResponse.json({ error: "Not found" }, { status: 404 });
     }
 
-    if (order.status === "PAID") {
-      return NextResponse.json(
-        { error: "Cannot delete a paid order" },
-        { status: 400 }
-      );
-    }
+    await Order.findOneAndDelete({ orderId: parsed.data });
 
-    // Atomically delete only non-PAID orders (race-condition safe)
-    const deleted = await Order.findOneAndDelete({
-      orderId: parsed.data,
-      status: { $ne: "PAID" },
-    });
-
-    if (!deleted) {
-      return NextResponse.json(
-        { error: "Order status changed, cannot delete" },
-        { status: 409 }
-      );
-    }
-
-    // Restore stock that was reserved at checkout
-    await Promise.all(
-      deleted.items.map((item) =>
-        Wine.updateOne(
-          { slug: item.wineSlug },
-          { $inc: { stock: item.quantity } }
+    // Restore reserved stock only for unpaid orders (paid = items were sold)
+    if (order.status !== "PAID") {
+      await Promise.all(
+        order.items.map((item) =>
+          Wine.updateOne(
+            { slug: item.wineSlug },
+            { $inc: { stock: item.quantity } }
+          )
         )
-      )
-    );
+      );
+    }
 
     return NextResponse.json({ success: true });
   } catch (error) {

@@ -1,8 +1,10 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
+import { useScrollLock } from "@/hooks/useScrollLock";
+import { useFocusTrap } from "@/hooks/useFocusTrap";
 
 const MENU_PAGES = [
   "/images/menu/page-1.jpg",
@@ -17,38 +19,38 @@ interface MenuModalProps {
 }
 
 export function MenuModal({ open, onClose }: MenuModalProps) {
-  useEffect(() => {
-    if (open) {
-      document.body.style.overflow = "hidden";
-    } else {
-      document.body.style.overflow = "";
-    }
-    return () => {
-      document.body.style.overflow = "";
-    };
-  }, [open]);
+  useScrollLock(open);
+  const trapRef = useFocusTrap(open);
+  const onCloseRef = useRef(onClose);
+  onCloseRef.current = onClose;
 
   useEffect(() => {
+    if (!open) return;
     const handleKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") onClose();
+      if (e.key === "Escape") onCloseRef.current();
     };
-    if (open) window.addEventListener("keydown", handleKey);
+    window.addEventListener("keydown", handleKey);
     return () => window.removeEventListener("keydown", handleKey);
-  }, [open, onClose]);
+  }, [open]);
 
   return (
     <AnimatePresence>
       {open && (
         <motion.div
+          ref={trapRef}
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           transition={{ duration: 0.3 }}
+          role="dialog"
+          aria-modal="true"
+          aria-label="תפריט"
           className="fixed inset-0 z-50 flex items-center justify-center bg-cream/60 backdrop-blur-sm"
           onClick={onClose}
         >
           {/* Close button — fixed top-left */}
           <button
+            type="button"
             onClick={onClose}
             className="absolute left-4 top-4 z-50 flex h-10 w-10 items-center justify-center rounded-full bg-primary/80 text-cream backdrop-blur-sm transition-colors duration-200 hover:bg-warm"
             aria-label="סגור תפריט"

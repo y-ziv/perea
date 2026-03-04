@@ -1,4 +1,3 @@
-import Link from "next/link";
 import Image from "next/image";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { Button } from "@/components/ui/Button";
@@ -22,6 +21,7 @@ export function Experience() {
                 src="/images/perea day.jpg"
                 alt="חנות יין וטעימות"
                 fill
+                sizes="(max-width: 640px) 100vw, 50vw"
                 className="object-cover object-[center_70%]"
               />
             </div>
@@ -41,6 +41,7 @@ export function Experience() {
                 src="/images/perea night.jpg"
                 alt="ביסטרו יין"
                 fill
+                sizes="(max-width: 640px) 100vw, 50vw"
                 className="object-cover object-[center_60%]"
               />
             </div>

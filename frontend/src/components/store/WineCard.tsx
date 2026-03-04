@@ -1,0 +1,86 @@
+"use client";
+
+import { memo } from "react";
+import Image from "next/image";
+import { formatPrice } from "@/lib/format";
+import type { CartItem } from "@/types";
+
+export interface WineCardProps {
+  slug: string;
+  name: string;
+  winery: string;
+  country: string;
+  grape: string;
+  year?: number;
+  description: string;
+  image: string;
+  priceAgorot: number;
+  stock: number;
+  onAddToCart: (item: CartItem) => void;
+}
+
+const COUNTRY_NAMES: Record<string, string> = {
+  Greece: "יוון",
+  Israel: "ישראל",
+};
+
+export const WineCard = memo(function WineCard(wine: WineCardProps) {
+  const addItem = wine.onAddToCart;
+
+  const outOfStock = wine.stock <= 0;
+  const noPrice = wine.priceAgorot <= 0;
+
+  function handleAdd() {
+    if (outOfStock || noPrice) return;
+    addItem({
+      wineSlug: wine.slug,
+      quantity: 1,
+      name: wine.name,
+      priceAgorot: wine.priceAgorot,
+      image: wine.image,
+      stock: wine.stock,
+    });
+  }
+
+  return (
+    <div className="group">
+      <div className="relative mb-4 h-56 overflow-hidden rounded-sm sm:mb-6 sm:h-72">
+        <Image
+          src={wine.image}
+          alt={wine.name}
+          fill
+          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+          className="object-cover transition-transform duration-500 group-hover:scale-105"
+        />
+      </div>
+      <p className="overline mb-1">
+        {COUNTRY_NAMES[wine.country] || wine.country} · {wine.grape}
+      </p>
+      <h3 className="font-sans text-body-lg font-medium text-cream sm:text-h4">
+        {wine.name}
+      </h3>
+      <p className="mt-1 text-caption text-cream-muted">
+        {wine.winery} {wine.year && `· ${wine.year}`}
+      </p>
+      {!noPrice && (
+        <p className="mt-1 text-body font-medium text-copper">
+          {formatPrice(wine.priceAgorot)}
+        </p>
+      )}
+      <p className="mt-2 text-body font-light leading-relaxed text-cream-muted sm:mt-3">
+        {wine.description}
+      </p>
+      {!noPrice && (
+        <button
+          type="button"
+          onClick={handleAdd}
+          disabled={outOfStock}
+          aria-label={outOfStock ? `${wine.name} אזל מהמלאי` : `הוסף ${wine.name} לעגלה`}
+          className="mt-3 border border-copper px-6 py-2 text-caption font-medium text-copper transition-colors hover:bg-copper hover:text-primary disabled:cursor-not-allowed disabled:opacity-40"
+        >
+          {outOfStock ? "אזל מהמלאי" : "הוספה לעגלה"}
+        </button>
+      )}
+    </div>
+  );
+});

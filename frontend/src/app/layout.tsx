@@ -1,8 +1,6 @@
 import type { Metadata } from "next";
 import { notoSansHebrew, rubik, assistant, amaticSC } from "@/lib/fonts";
 import { siteConfig } from "@/data/siteConfig";
-import { Navigation } from "@/components/layout/Navigation";
-import { Footer } from "@/components/layout/Footer";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -59,7 +57,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="he" dir="rtl">
+    <html lang="he" dir="rtl" data-scroll-behavior="smooth">
       <head>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
@@ -75,9 +73,7 @@ export default function RootLayout({
       <body
         className={`${notoSansHebrew.variable} ${rubik.variable} ${assistant.variable} ${amaticSC.variable} font-sans antialiased`}
       >
-        <Navigation />
-        <main>{children}</main>
-        <Footer />
+        {children}
       </body>
     </html>
   );

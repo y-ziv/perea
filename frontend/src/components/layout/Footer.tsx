@@ -17,6 +17,7 @@ export function Footer() {
                 src="/images/logo-warm.png"
                 alt="פראה בית יין"
                 fill
+                sizes="120px"
                 className="object-contain scale-[1.8] origin-center"
               />
             </div>

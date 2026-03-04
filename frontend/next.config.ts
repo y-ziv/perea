@@ -4,6 +4,12 @@ const nextConfig: NextConfig = {
   /* config options here */
   images: {
     qualities: [75, 85],
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "res.cloudinary.com",
+      },
+    ],
   },
 };
 

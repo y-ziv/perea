@@ -92,14 +92,14 @@ export function Navigation() {
           {/* Logo — aligned to the left manually via absolute positioning on desktop */}
           <Link
             href="/"
-            className="relative z-50 flex h-14 shrink-0 items-center justify-center overflow-visible sm:absolute sm:left-6 sm:top-1/2 sm:-translate-y-1/2"
+            className="relative z-50 flex h-14 shrink-0 items-center justify-center overflow-visible sm:absolute sm:left-12 sm:top-1/2 sm:-translate-y-1/2"
           >
             <Image
               src="/images/logo-warm.png"
               alt="פראה בית יין"
               width={160}
               height={160}
-              className="h-14 w-auto scale-150 origin-center sm:scale-[2.5]"
+              className="h-14 w-auto scale-[2.5] origin-center sm:scale-[3.5]"
               priority
             />
           </Link>

@@ -98,10 +98,23 @@ export async function POST(request: Request) {
           `Indicator: amount mismatch for order ${targetOrder.orderId} — ` +
           `expected ₪${expectedShekel}, charged ₪${apiSumBilled}`
         );
-        await Order.findOneAndUpdate(
+        const mismatchOrder = await Order.findOneAndUpdate(
           { orderId: targetOrder.orderId, status: "PENDING" },
-          { $set: { status: "FAILED" } }
+          { $set: { status: "FAILED" } },
+          { new: true }
         );
+        // Restore reserved stock on amount mismatch
+        if (mismatchOrder) {
+          await Promise.all(
+            mismatchOrder.items.map((item) =>
+              Wine.updateOne(
+                { slug: item.wineSlug },
+                { $inc: { stock: item.quantity } }
+              )
+            )
+          );
+          console.info(`Order ${mismatchOrder.orderId} marked FAILED (amount mismatch), stock restored`);
+        }
         return NextResponse.json({ status: "ok" });
       }
     }

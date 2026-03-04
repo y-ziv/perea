@@ -39,6 +39,7 @@ export default async function EventPage({
           src={event.image}
           alt={event.title}
           fill
+          sizes="100vw"
           className="object-cover"
         />
       </div>

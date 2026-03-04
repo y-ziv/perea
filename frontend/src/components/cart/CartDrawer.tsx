@@ -39,14 +39,14 @@ export function CartDrawer() {
 
           <motion.div
             ref={trapRef}
-            initial={{ x: "-100%" }}
+            initial={{ x: "100%" }}
             animate={{ x: 0 }}
-            exit={{ x: "-100%" }}
+            exit={{ x: "100%" }}
             transition={{ type: "spring", damping: 30, stiffness: 300 }}
             role="dialog"
             aria-modal="true"
             aria-labelledby="cart-title"
-            className="fixed bottom-0 left-0 top-0 z-50 flex w-full max-w-md flex-col bg-primary shadow-2xl"
+            className="fixed bottom-0 right-0 top-0 z-50 flex w-full max-w-md flex-col bg-primary shadow-2xl"
           >
             <div className="flex items-center justify-between border-b border-warm px-6 py-4">
               <h2 id="cart-title" className="font-heading-secondary text-h4 text-copper">

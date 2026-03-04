@@ -32,7 +32,7 @@ const nextConfig: NextConfig = {
               "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
               "img-src 'self' data: https://res.cloudinary.com https://lh3.googleusercontent.com",
               "font-src 'self' https://fonts.gstatic.com",
-              "frame-src https://secure.cardcom.solutions",
+              "frame-src https://secure.cardcom.solutions https://www.google.com",
               "connect-src 'self' https://secure.cardcom.solutions",
               "object-src 'none'",
               "base-uri 'self'",

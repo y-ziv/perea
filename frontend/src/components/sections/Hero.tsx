@@ -54,7 +54,8 @@ export function Hero() {
                 alt=""
                 width={100}
                 height={100}
-                className=" h-14 w-14 sm:h-20 sm:w-20 md:h-30 md:w-30 "
+                className="h-14 w-14 sm:h-20 sm:w-20 md:h-30 md:w-30"
+                style={{ filter: "brightness(0.5) sepia(1) hue-rotate(340deg) saturate(6) contrast(0.9) opacity(0.85) drop-shadow(0 0 1.5px black) drop-shadow(0 0 1px black)" }}
               />
             </motion.div>
           </div>

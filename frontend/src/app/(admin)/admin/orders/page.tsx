@@ -2,17 +2,29 @@ import { connectDB } from "@/lib/mongodb";
 import { Order } from "@/models/Order";
 import { formatPrice } from "@/lib/format";
 import { OrderStatusBadge } from "@/components/admin/OrderStatusBadge";
+import { DeleteOrderButton } from "@/components/admin/DeleteOrderButton";
+import { OrderSearch } from "@/components/admin/OrderSearch";
 import Link from "next/link";
+import { Suspense } from "react";
 
 export default async function AdminOrdersPage({
   searchParams,
 }: {
-  searchParams: Promise<{ status?: string }>;
+  searchParams: Promise<{ status?: string; q?: string }>;
 }) {
-  const { status } = await searchParams;
+  const { status, q } = await searchParams;
   await connectDB();
 
-  const filter = status ? { status } : {};
+  const filter: Record<string, unknown> = {};
+  if (status) filter.status = status;
+  if (q) {
+    const regex = { $regex: q, $options: "i" };
+    filter.$or = [
+      { orderId: regex },
+      { "customer.name": regex },
+      { "customer.phone": regex },
+    ];
+  }
   const orders = await Order.find(filter).sort({ createdAt: -1 }).lean();
 
   const tabs = [
@@ -26,7 +38,13 @@ export default async function AdminOrdersPage({
     <div>
       <h1 className="font-heading-secondary text-h3 text-copper">הזמנות</h1>
 
-      <div className="mt-6 flex gap-2">
+      <div className="mt-6">
+        <Suspense>
+          <OrderSearch />
+        </Suspense>
+      </div>
+
+      <div className="mt-4 flex gap-2">
         {tabs.map((tab) => (
           <Link
             key={tab.value}
@@ -52,6 +70,7 @@ export default async function AdminOrdersPage({
               <th className="px-4 py-3 text-start">סטטוס</th>
               <th className="px-4 py-3 text-start">משלוח</th>
               <th className="px-4 py-3 text-start">תאריך</th>
+              <th className="px-4 py-3 text-start">פעולות</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-warm">
@@ -79,6 +98,9 @@ export default async function AdminOrdersPage({
                 </td>
                 <td className="px-4 py-3 text-caption text-cream-muted">
                   {new Date(order.createdAt).toLocaleDateString("he-IL")}
+                </td>
+                <td className="px-4 py-3">
+                  <DeleteOrderButton orderId={order.orderId} />
                 </td>
               </tr>
             ))}

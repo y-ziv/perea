@@ -22,3 +22,23 @@ export async function GET(
 
   return NextResponse.json(order);
 }
+
+export async function DELETE(
+  _request: Request,
+  { params }: { params: Promise<{ orderId: string }> }
+) {
+  const session = await auth();
+  if (!session) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
+  const { orderId } = await params;
+  await connectDB();
+  const deleted = await Order.findOneAndDelete({ orderId });
+
+  if (!deleted) {
+    return NextResponse.json({ error: "Not found" }, { status: 404 });
+  }
+
+  return NextResponse.json({ success: true });
+}

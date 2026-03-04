@@ -33,14 +33,6 @@ function SuccessContent() {
   const [status, setStatus] = useState<OrderStatus>("LOADING");
   const clearedRef = useRef(false);
 
-  // Build query string with Cardcom redirect params for server-side verification
-  const verifyParams = new URLSearchParams();
-  for (const key of ["lowprofilecode", "ResponseCode", "internalDealNumber"]) {
-    const val = searchParams.get(key);
-    if (val) verifyParams.set(key, val);
-  }
-  const qs = verifyParams.toString() ? `?${verifyParams.toString()}` : "";
-
   useEffect(() => {
     if (!orderId) {
       setStatus("NOT_FOUND");
@@ -53,7 +45,7 @@ function SuccessContent() {
 
     async function poll() {
       try {
-        const res = await fetch(`/api/orders/${orderId}${qs}`);
+        const res = await fetch(`/api/orders/${orderId}`);
         if (!res.ok) {
           setStatus("NOT_FOUND");
           clearInterval(timer);

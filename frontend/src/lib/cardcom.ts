@@ -94,7 +94,6 @@ export async function getLowProfileResult(
   });
 
   const data = await res.json();
-  console.log("GetLpResult raw response:", JSON.stringify(data, null, 2));
 
   return {
     approved: data.DealResponse === 0,

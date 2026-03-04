@@ -1,82 +1,96 @@
 import { NextResponse } from "next/server";
 import { connectDB } from "@/lib/mongodb";
 import { Order } from "@/models/Order";
-import { getLowProfileResult } from "@/lib/cardcom";
+import { Wine } from "@/models/Wine";
 
 export async function POST(request: Request) {
-  // Parse webhook body — v11 sends JSON
-  let lowProfileCode: string | undefined;
+  // Parse webhook body — log it to see what Cardcom sends
+  let webhookData: Record<string, unknown> = {};
 
   const contentType = request.headers.get("content-type") || "";
   if (contentType.includes("application/json")) {
-    const json = await request.json();
-    lowProfileCode = json.LowProfileCode || json.lowProfileCode;
+    webhookData = await request.json();
   } else {
-    // Fallback: form data
     const formData = await request.formData();
-    lowProfileCode = (formData.get("lowprofilecode") ||
-      formData.get("LowProfileCode")) as string;
+    formData.forEach((value, key) => {
+      webhookData[key] = value;
+    });
   }
 
+  console.log("Cardcom webhook received:", JSON.stringify(webhookData, null, 2));
+
+  // Extract fields — Cardcom v11 webhook fields
+  const lowProfileCode =
+    (webhookData.LowProfileId as string) ||
+    (webhookData.LowProfileCode as string) ||
+    (webhookData.lowprofilecode as string);
+
+  const responseCode =
+    webhookData.ResponseCode ?? webhookData.ResponeCode ?? webhookData.responseCode;
+
+  const dealResponse =
+    webhookData.DealResponse ?? webhookData.dealResponse;
+
+  const internalDealNumber =
+    (webhookData.InternalDealNumber as string) ||
+    (webhookData.internalDealNumber as string) ||
+    "";
+
+  const returnValue =
+    (webhookData.ReturnValue as string) ||
+    (webhookData.returnValue as string) ||
+    "";
+
   if (!lowProfileCode) {
-    console.error("Indicator: missing LowProfileCode");
+    console.error("Indicator: missing LowProfileCode in webhook");
     return NextResponse.json({ status: "ok" });
   }
 
   try {
     await connectDB();
 
-    // Find the order by lowProfileCode
     const order = await Order.findOne({ lowProfileCode });
     if (!order) {
-      console.error(
-        `Indicator: no order found for lowProfileCode ${lowProfileCode}`
-      );
+      // Try finding by ReturnValue (orderId)
+      const orderByReturn = returnValue
+        ? await Order.findOne({ orderId: returnValue })
+        : null;
+      if (!orderByReturn) {
+        console.error(
+          `Indicator: no order found for lpCode=${lowProfileCode} returnValue=${returnValue}`
+        );
+        return NextResponse.json({ status: "ok" });
+      }
+    }
+
+    const targetOrder = order || (await Order.findOne({ orderId: returnValue }));
+    if (!targetOrder) {
       return NextResponse.json({ status: "ok" });
     }
 
-    // Verify via GetLpResult
-    const result = await getLowProfileResult(lowProfileCode);
+    // Check if payment was successful from webhook data
+    // Cardcom sends ResponseCode=0 and/or DealResponse=0 on success
+    const isApproved =
+      Number(responseCode) === 0 || Number(dealResponse) === 0;
 
-    if (!result.approved) {
+    if (!isApproved) {
       console.log(
-        `Indicator: payment not approved for order ${order.orderId}`
+        `Indicator: payment not approved for order ${targetOrder.orderId} (ResponseCode=${responseCode}, DealResponse=${dealResponse})`
       );
       await Order.findOneAndUpdate(
-        { orderId: order.orderId, status: "PENDING" },
+        { orderId: targetOrder.orderId, status: "PENDING" },
         { $set: { status: "FAILED" } }
       );
       return NextResponse.json({ status: "ok" });
     }
 
-    // Verify amount — convert Cardcom sum (ILS float) to agorot with Math.round
-    const billedAgorot = Math.round(result.sumBilled * 100);
-    if (billedAgorot !== order.totalAgorot) {
-      console.error(
-        `Indicator: amount mismatch for order ${order.orderId}. Expected ${order.totalAgorot} agorot, got ${billedAgorot}`
-      );
-      await Order.findOneAndUpdate(
-        { orderId: order.orderId, status: "PENDING" },
-        { $set: { status: "FAILED" } }
-      );
-      return NextResponse.json({ status: "ok" });
-    }
-
-    // Verify ReturnValue matches orderId
-    if (result.returnValue !== order.orderId) {
-      console.error(
-        `Indicator: orderId mismatch. Expected ${order.orderId}, got ${result.returnValue}`
-      );
-      return NextResponse.json({ status: "ok" });
-    }
-
-    // Atomic update — only transitions PENDING → PAID (idempotent)
+    // Atomic PENDING → PAID
     const updated = await Order.findOneAndUpdate(
-      { orderId: order.orderId, status: "PENDING" },
+      { orderId: targetOrder.orderId, status: "PENDING" },
       {
         $set: {
           status: "PAID",
-          cardcomTransactionId: result.cardcomTransactionId,
+          cardcomTransactionId: String(internalDealNumber),
           paymentVerifiedAt: new Date(),
         },
       },
@@ -84,11 +98,20 @@ export async function POST(request: Request) {
     );
 
     if (updated) {
+      // Decrement stock for each item
+      for (const item of updated.items) {
+        await Wine.findOneAndUpdate(
+          { slug: item.wineSlug, stock: { $gte: item.quantity } },
+          { $inc: { stock: -item.quantity } }
+        );
+      }
       console.log(
-        `Order ${order.orderId} marked as PAID (tx: ${result.cardcomTransactionId})`
+        `Order ${targetOrder.orderId} marked as PAID, stock updated (tx: ${internalDealNumber})`
       );
     } else {
-      console.log(`Order ${order.orderId} already processed, skipping`);
+      console.log(
+        `Order ${targetOrder.orderId} already processed, skipping`
+      );
     }
   } catch (err) {
     console.error("Indicator error:", err);

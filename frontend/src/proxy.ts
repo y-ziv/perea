@@ -8,7 +8,7 @@ function isAdmin(email?: string | null): boolean {
   return allowed.length > 0 && allowed.includes(email.toLowerCase());
 }
 
-export default auth((req) => {
+export const proxy = auth((req) => {
   const { pathname } = req.nextUrl;
 
   // API routes: 401 if not authenticated, 403 if not admin

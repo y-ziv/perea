@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import type { Wine } from "@/types";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { WineGrid } from "@/components/store/WineGrid";
 import { getAllWines } from "@/lib/wines";
@@ -12,7 +13,12 @@ export const metadata: Metadata = {
 export const revalidate = 60;
 
 export default async function WinePage() {
-  const wines = await getAllWines();
+  let wines: Wine[];
+  try {
+    wines = await getAllWines();
+  } catch {
+    wines = [];
+  }
 
   return (
     <section className="bg-primary pt-24 pb-14 sm:pt-32 sm:pb-20">

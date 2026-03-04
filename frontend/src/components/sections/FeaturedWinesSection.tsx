@@ -2,7 +2,13 @@ import { getFeaturedWines } from "@/lib/wines";
 import { FeaturedWinesClient } from "./FeaturedWinesClient";
 
 export async function FeaturedWinesSection() {
-  const wines = await getFeaturedWines();
+  let wines;
+  try {
+    wines = await getFeaturedWines();
+  } catch {
+    // Graceful degradation: if DB is unavailable (e.g. during build), skip section
+    return null;
+  }
 
   const winesData = wines.map((w) => ({
     slug: w.slug,

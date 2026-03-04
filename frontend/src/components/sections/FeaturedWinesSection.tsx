@@ -5,8 +5,9 @@ export async function FeaturedWinesSection() {
   let wines;
   try {
     wines = await getFeaturedWines();
-  } catch {
+  } catch (e) {
     // Graceful degradation: if DB is unavailable (e.g. during build), skip section
+    console.error("FeaturedWinesSection: failed to load wines", e);
     return null;
   }
 

@@ -106,6 +106,8 @@ export function WineForm({ initialData, mode }: WineFormProps) {
             className={inputClass}
             value={form.slug}
             onChange={(e) => updateField("slug", e.target.value)}
+            pattern="^[a-z0-9]+(-[a-z0-9]+)*$"
+            title="Lowercase letters, numbers, and single hyphens only"
             required
             disabled={mode === "edit"}
           />

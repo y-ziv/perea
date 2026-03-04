@@ -29,7 +29,7 @@ export default async function OrderDetailPage({
 
       <div className="mt-6 flex items-center gap-4">
         <h1 className="font-heading-secondary text-h3 text-copper">
-          הזמנה {order.orderId.slice(0, 8)}...
+          הזמנה {order.orderId}
         </h1>
         <OrderStatusBadge status={order.status} />
       </div>

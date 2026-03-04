@@ -132,7 +132,7 @@ function SuccessContent() {
             תודה על ההזמנה. נשלח לכם עדכון בקרוב.
           </p>
           <p className="mt-2 text-caption text-cream-muted">
-            מזהה הזמנה: {orderId?.slice(0, 8)}...
+            מזהה הזמנה: {orderId}
           </p>
           <Link
             href="/store"

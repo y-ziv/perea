@@ -19,7 +19,7 @@
   --font-sans: var(--font-assistant);
   --font-main: var(--font-assistant);
   --font-hand: var(--font-amatic-sc);
-  --font-handwritten: var(--font-playpen);
+  --font-handwritten: "Playpen Sans Hebrew", cursive;
 
   /* Font sizes */
   /* Main Headers - Cormorant Garamond (56-112px) */

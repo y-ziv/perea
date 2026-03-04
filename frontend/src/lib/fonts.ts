@@ -1,4 +1,4 @@
-import { Noto_Sans_Hebrew, Rubik, Assistant, Amatic_SC, Playpen_Sans_Hebrew } from "next/font/google";
+import { Noto_Sans_Hebrew, Rubik, Assistant, Amatic_SC } from "next/font/google";
 
 export const notoSansHebrew = Noto_Sans_Hebrew({
   subsets: ["latin", "hebrew"],
@@ -28,9 +28,6 @@ export const amaticSC = Amatic_SC({
   display: "swap",
 });
 
-export const playpenSansHebrew = Playpen_Sans_Hebrew({
-  subsets: ["latin", "hebrew"],
-  weight: ["300", "400", "500", "700"],
-  variable: "--font-playpen",
-  display: "swap",
-});
+// Playpen Sans Hebrew is loaded via <link> in layout.tsx to avoid
+// Next.js font fallback warnings (no override values in its database).
+// The CSS variable --font-playpen is set in globals.css instead.

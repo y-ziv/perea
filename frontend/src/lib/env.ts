@@ -1,3 +1,5 @@
+import "server-only";
+
 function required(key: string): string {
   const value = process.env[key];
   if (!value) {
@@ -37,9 +39,6 @@ export const env = {
   },
   get AUTH_SECRET() {
     return required("AUTH_SECRET");
-  },
-  get ADMIN_EMAILS() {
-    return required("ADMIN_EMAILS");
   },
   get BASE_URL() {
     return required("NEXT_PUBLIC_BASE_URL");

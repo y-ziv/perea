@@ -69,12 +69,14 @@ export async function POST(request: Request) {
     // the payment if GetLpResult is unavailable but the webhook indicates success.
     let apiVerified = false;
     let apiTransactionId = "";
+    let apiSumBilled: number | null = null;
     try {
       const lpResult = await getLowProfileResult(lowProfileCode);
       apiVerified = lpResult.approved;
       apiTransactionId = lpResult.cardcomTransactionId;
+      apiSumBilled = lpResult.sumBilled;
       console.info(
-        `Indicator: GetLpResult approved=${apiVerified} txId=${apiTransactionId}`
+        `Indicator: GetLpResult approved=${apiVerified} txId=${apiTransactionId} sum=${apiSumBilled}`
       );
     } catch (err) {
       // If the API call fails entirely (network error, timeout), do NOT
@@ -87,6 +89,22 @@ export async function POST(request: Request) {
     // The webhook data alone is never trusted (endpoint is unauthenticated).
     const approved = apiVerified;
     const transactionId = apiTransactionId || webhookTransactionId;
+
+    // Verify the charged amount matches the order total
+    if (approved && apiSumBilled !== null) {
+      const expectedShekel = targetOrder.totalAgorot / 100;
+      if (Math.abs(apiSumBilled - expectedShekel) > 0.01) {
+        console.error(
+          `Indicator: amount mismatch for order ${targetOrder.orderId} — ` +
+          `expected ₪${expectedShekel}, charged ₪${apiSumBilled}`
+        );
+        await Order.findOneAndUpdate(
+          { orderId: targetOrder.orderId, status: "PENDING" },
+          { $set: { status: "FAILED" } }
+        );
+        return NextResponse.json({ status: "ok" });
+      }
+    }
 
     if (!approved) {
       console.warn(

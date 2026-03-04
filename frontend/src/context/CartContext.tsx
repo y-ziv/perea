@@ -49,18 +49,22 @@ function loadCart(): CartItem[] {
   }
 }
 
-function safeLoadCart(): CartItem[] {
-  if (typeof window === "undefined") return [];
-  return loadCart();
-}
-
 export function CartProvider({ children }: { children: ReactNode }) {
-  const [items, setItems] = useState<CartItem[]>(safeLoadCart);
+  const [items, setItems] = useState<CartItem[]>([]);
   const [isOpen, setIsOpen] = useState(false);
+  const [hydrated, setHydrated] = useState(false);
+
+  // Load cart from localStorage after hydration to avoid SSR mismatch
+  useEffect(() => {
+    setItems(loadCart());
+    setHydrated(true);
+  }, []);
 
   useEffect(() => {
-    localStorage.setItem(CART_KEY, JSON.stringify(items));
-  }, [items]);
+    if (hydrated) {
+      localStorage.setItem(CART_KEY, JSON.stringify(items));
+    }
+  }, [items, hydrated]);
 
   const addItem = useCallback((item: CartItem) => {
     setItems((prev) => {

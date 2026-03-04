@@ -1,3 +1,4 @@
+import "server-only";
 import { env } from "@/lib/env";
 
 const CARDCOM_API = "https://secure.cardcom.solutions/api/v11";
@@ -132,8 +133,9 @@ export async function getLowProfileResult(
   const responseCode = data.ResponseCode ?? data.responseCode;
 
   const approved =
-    dealResponse == 0 ||
-    (responseCode == 0 && Number(data.InternalDealNumber || data.internalDealNumber || 0) > 0);
+    dealResponse === 0 || dealResponse === "0" ||
+    ((responseCode === 0 || responseCode === "0") &&
+      Number(data.InternalDealNumber || data.internalDealNumber || 0) > 0);
 
   return {
     approved,

@@ -1,13 +1,11 @@
 import { auth } from "@/lib/auth";
 import { NextResponse } from "next/server";
-
-const allowedEmails = (process.env.ADMIN_EMAILS ?? "")
-  .split(",")
-  .map((e) => e.trim().toLowerCase())
-  .filter(Boolean);
+import { getAllowedEmails } from "@/lib/allowed-emails";
 
 function isAdmin(email?: string | null): boolean {
-  return !!email && allowedEmails.includes(email.toLowerCase());
+  if (!email) return false;
+  const allowed = getAllowedEmails();
+  return allowed.length > 0 && allowed.includes(email.toLowerCase());
 }
 
 export default auth((req) => {

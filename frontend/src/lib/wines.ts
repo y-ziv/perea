@@ -6,6 +6,7 @@ export async function getAllWines(): Promise<WineType[]> {
   await connectDB();
   return Wine.find({ stock: { $gt: 0 } })
     .sort({ featured: -1, createdAt: -1 })
+    .limit(200)
     .lean<WineType[]>();
 }
 

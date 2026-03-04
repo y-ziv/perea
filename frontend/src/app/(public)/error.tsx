@@ -1,11 +1,18 @@
 "use client";
 
+import { useEffect } from "react";
+
 export default function PublicError({
+  error,
   reset,
 }: {
   error: Error & { digest?: string };
   reset: () => void;
 }) {
+  useEffect(() => {
+    console.error("Public error boundary:", error);
+  }, [error]);
+
   return (
     <section className="bg-primary pt-32 pb-20">
       <div className="mx-auto max-w-lg px-4 text-center">

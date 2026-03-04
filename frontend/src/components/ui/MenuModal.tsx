@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
 import { useScrollLock } from "@/hooks/useScrollLock";
@@ -21,15 +21,17 @@ interface MenuModalProps {
 export function MenuModal({ open, onClose }: MenuModalProps) {
   useScrollLock(open);
   const trapRef = useFocusTrap(open);
+  const onCloseRef = useRef(onClose);
+  onCloseRef.current = onClose;
 
   useEffect(() => {
     if (!open) return;
     const handleKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") onClose();
+      if (e.key === "Escape") onCloseRef.current();
     };
     window.addEventListener("keydown", handleKey);
     return () => window.removeEventListener("keydown", handleKey);
-  }, [open, onClose]);
+  }, [open]);
 
   return (
     <AnimatePresence>

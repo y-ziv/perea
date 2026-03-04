@@ -15,7 +15,7 @@ export default async function AdminDashboard() {
   const stats = [
     { label: "יינות", value: wineCount, href: "/admin/wines" },
     { label: "הזמנות", value: orderCount, href: "/admin/orders" },
-    { label: "ממתינות", value: pendingOrders, href: "/admin/orders" },
+    { label: "ממתינות", value: pendingOrders, href: "/admin/orders?status=PENDING" },
   ];
 
   return (

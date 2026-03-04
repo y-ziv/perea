@@ -1,11 +1,18 @@
 "use client";
 
+import { useEffect } from "react";
+
 export default function AdminError({
+  error,
   reset,
 }: {
   error: Error & { digest?: string };
   reset: () => void;
 }) {
+  useEffect(() => {
+    console.error("Admin error boundary:", error);
+  }, [error]);
+
   return (
     <div className="p-8 text-center">
       <h1 className="text-xl font-semibold text-red-600">שגיאה</h1>

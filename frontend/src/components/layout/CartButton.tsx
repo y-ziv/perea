@@ -10,7 +10,7 @@ export function CartButton() {
       type="button"
       onClick={openCart}
       className="relative text-copper transition-colors hover:text-copper-light"
-      aria-label="עגלת קניות"
+      aria-label={totalItems > 0 ? `עגלת קניות (${totalItems} פריטים)` : "עגלת קניות"}
     >
       <svg
         className="h-6 w-6"

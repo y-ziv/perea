@@ -6,13 +6,18 @@ import { revalidatePath } from "next/cache";
 import { withAdminAuth } from "@/lib/admin-auth";
 import { slugSchema, wineUpdateSchema } from "@/lib/validations";
 
+function parseSlug(rawSlug: string): string | null {
+  const parsed = slugSchema.safeParse(rawSlug);
+  return parsed.success ? parsed.data : null;
+}
+
 export const GET = withAdminAuth(async (_request, { params }) => {
   try {
     const { slug: rawSlug } = await params;
-    if (!slugSchema.safeParse(rawSlug).success) {
+    const slug = parseSlug(rawSlug);
+    if (!slug) {
       return NextResponse.json({ error: "Invalid slug" }, { status: 400 });
     }
-    const slug = rawSlug;
     await connectDB();
     const wine = await Wine.findOne({ slug }).lean();
 
@@ -30,10 +35,10 @@ export const GET = withAdminAuth(async (_request, { params }) => {
 export const PUT = withAdminAuth(async (request, { params }) => {
   try {
     const { slug: rawSlug } = await params;
-    if (!slugSchema.safeParse(rawSlug).success) {
+    const slug = parseSlug(rawSlug);
+    if (!slug) {
       return NextResponse.json({ error: "Invalid slug" }, { status: 400 });
     }
-    const slug = rawSlug;
     const raw = await request.json();
     const parsed = wineUpdateSchema.safeParse(raw);
     if (!parsed.success) {
@@ -63,10 +68,10 @@ export const PUT = withAdminAuth(async (request, { params }) => {
 export const DELETE = withAdminAuth(async (_request, { params }) => {
   try {
     const { slug: rawSlug } = await params;
-    if (!slugSchema.safeParse(rawSlug).success) {
+    const slug = parseSlug(rawSlug);
+    if (!slug) {
       return NextResponse.json({ error: "Invalid slug" }, { status: 400 });
     }
-    const slug = rawSlug;
     await connectDB();
 
     const hasPendingOrders = await Order.exists({
@@ -75,7 +80,7 @@ export const DELETE = withAdminAuth(async (_request, { params }) => {
     });
     if (hasPendingOrders) {
       return NextResponse.json(
-        { error: "לא ניתן למחוק יין עם הזמנות ממתינות" },
+        { error: "Cannot delete wine with pending orders" },
         { status: 400 }
       );
     }

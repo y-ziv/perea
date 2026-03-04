@@ -43,7 +43,10 @@ const checkoutItemSchema = z.object({
 });
 
 export const checkoutBodySchema = z.object({
-  items: z.array(checkoutItemSchema).min(1).max(50),
+  items: z.array(checkoutItemSchema).min(1).max(50).refine(
+    (items) => new Set(items.map((i) => i.wineSlug)).size === items.length,
+    { message: "Duplicate wine items are not allowed — adjust quantity instead" }
+  ),
   customer: z.object({
     name: z.string().min(1).max(200),
     phone: z.string().regex(/^0\d{8,9}$/, "Invalid Israeli phone number"),

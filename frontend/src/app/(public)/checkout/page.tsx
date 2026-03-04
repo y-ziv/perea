@@ -116,6 +116,15 @@ export default function CheckoutPage() {
       }
 
       const { redirectUrl } = await res.json();
+      // Validate redirect goes to expected payment gateway
+      try {
+        const redirectHost = new URL(redirectUrl).hostname;
+        if (!redirectHost.endsWith("cardcom.solutions") && !redirectHost.endsWith("cardcom.co.il")) {
+          throw new Error("Unexpected payment redirect");
+        }
+      } catch {
+        throw new Error("Invalid payment redirect URL");
+      }
       window.location.href = redirectUrl;
       // Fallback: if navigation doesn't happen within 5s, re-enable the button
       setTimeout(() => setLoading(false), 5000);
@@ -179,7 +188,7 @@ export default function CheckoutPage() {
               )}
             </div>
 
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
               <div>
                 <label htmlFor="checkout-phone" className="mb-1 block text-caption font-medium text-cream-muted">
                   טלפון *

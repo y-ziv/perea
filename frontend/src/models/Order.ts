@@ -56,7 +56,7 @@ const OrderSchema = new Schema<IOrder>(
         message: "Order must have at least one item",
       },
     },
-    totalAgorot: { type: Number, required: true, min: 0 },
+    totalAgorot: { type: Number, required: true, min: 1 },
     customer: {
       name: { type: String, required: true },
       phone: { type: String, required: true },

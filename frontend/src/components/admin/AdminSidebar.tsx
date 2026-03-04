@@ -4,6 +4,8 @@ import { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { signOut } from "next-auth/react";
+import { useScrollLock } from "@/hooks/useScrollLock";
+import { useFocusTrap } from "@/hooks/useFocusTrap";
 
 const links = [
   { href: "/admin", label: "דשבורד" },
@@ -63,6 +65,8 @@ function SidebarContent({
 export function AdminSidebar() {
   const pathname = usePathname();
   const [mobileOpen, setMobileOpen] = useState(false);
+  useScrollLock(mobileOpen);
+  const mobileTrapRef = useFocusTrap(mobileOpen);
 
   return (
     <>
@@ -87,6 +91,7 @@ export function AdminSidebar() {
             aria-hidden="true"
           />
           <aside
+            ref={mobileTrapRef}
             aria-label="ניווט ניהול"
             className="fixed right-0 top-0 z-50 flex h-screen w-56 flex-col border-l border-warm bg-primary md:hidden"
           >

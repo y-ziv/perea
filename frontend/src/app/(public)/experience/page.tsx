@@ -27,7 +27,7 @@ export default function ExperiencePage() {
           src="/images/perea day.jpg"
           alt="חנות יין וטעימות בפראה"
           fill
-          className="object-cover"
+          className="object-cover object-[center_70%]"
         />
       </div>
 
@@ -57,7 +57,7 @@ export default function ExperiencePage() {
           src="/images/perea night.jpg"
           alt="ביסטרו יין בפראה"
           fill
-          className="object-cover"
+          className="object-cover object-[center_60%]"
         />
       </div>
 

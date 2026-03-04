@@ -4,13 +4,20 @@ import { Order } from "@/models/Order";
 import Link from "next/link";
 
 export default async function AdminDashboard() {
-  await connectDB();
+  let wineCount = 0;
+  let orderCount = 0;
+  let pendingOrders = 0;
 
-  const [wineCount, orderCount, pendingOrders] = await Promise.all([
-    Wine.countDocuments(),
-    Order.countDocuments(),
-    Order.countDocuments({ status: "PENDING" }),
-  ]);
+  try {
+    await connectDB();
+    [wineCount, orderCount, pendingOrders] = await Promise.all([
+      Wine.countDocuments(),
+      Order.countDocuments(),
+      Order.countDocuments({ status: "PENDING" }),
+    ]);
+  } catch (e) {
+    console.error("Admin dashboard DB error:", e);
+  }
 
   const stats = [
     { label: "יינות", value: wineCount, href: "/admin/wines" },

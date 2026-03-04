@@ -28,6 +28,8 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Forbidden" }, { status: 403 });
   }
 
+  const reservedItems: { slug: string; quantity: number }[] = [];
+
   try {
     const raw = await request.json();
     const parsed = checkoutBodySchema.safeParse(raw);
@@ -50,7 +52,6 @@ export async function POST(request: Request) {
     // Validate all wines exist, have price, and atomically reserve stock
     const orderItems: IOrderItem[] = [];
     let totalAgorot = 0;
-    const reservedItems: { slug: string; quantity: number }[] = [];
 
     for (const item of items) {
       const wine = wineMap.get(item.wineSlug);
@@ -140,6 +141,12 @@ export async function POST(request: Request) {
       );
     }
   } catch (error) {
+    // Best-effort rollback of any stock reserved before the crash
+    if (reservedItems.length > 0) {
+      await restoreStock(reservedItems).catch((e) =>
+        console.error("Stock rollback failed:", e)
+      );
+    }
     console.error("POST /api/checkout:", error);
     return NextResponse.json(
       { error: "Internal server error" },

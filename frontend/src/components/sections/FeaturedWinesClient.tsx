@@ -59,7 +59,8 @@ export function FeaturedWinesClient({ wines }: { wines: FeaturedWine[] }) {
     if (!el) return;
     const card = el.querySelector<HTMLElement>("[data-wine-card]");
     if (!card) return;
-    const distance = card.offsetWidth + 16;
+    const gap = parseFloat(getComputedStyle(el).columnGap) || 16;
+    const distance = card.offsetWidth + gap;
     el.scrollBy({ left: -dir * distance, behavior: "smooth" });
   }, []);
 

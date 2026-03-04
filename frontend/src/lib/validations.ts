@@ -22,8 +22,8 @@ export const wineSchema = z.object({
   description: z.string().min(1).max(5000),
 
   image: z.string().url("Image must be a valid URL").refine(
-    (url) => url.startsWith("https://"),
-    "Image must be an HTTPS URL"
+    (url) => url.startsWith("https://res.cloudinary.com/"),
+    "Image must be a Cloudinary URL"
   ),
   priceAgorot: z.number().int().min(1, "Price must be at least 1 agora").max(10_000_000),
   stock: z.number().int().min(0),
@@ -55,7 +55,10 @@ export const checkoutBodySchema = z.object({
     notes: z.string().max(1000).optional(),
   }),
   deliveryMethod: z.enum(["pickup", "shipping"]),
-});
+}).refine(
+  (data) => data.deliveryMethod !== "shipping" || (data.customer.address && data.customer.address.trim().length > 0),
+  { message: "Address is required for shipping orders", path: ["customer", "address"] }
+);
 
 // --- Order ID ---
 

@@ -21,7 +21,7 @@ export default async function AdminWinesPage() {
         </Link>
       </div>
 
-      <div className="mt-8 overflow-hidden rounded border border-warm">
+      <div className="mt-8 overflow-x-auto rounded border border-warm">
         <table className="w-full">
           <thead className="bg-primary">
             <tr className="text-start text-caption text-cream-muted">

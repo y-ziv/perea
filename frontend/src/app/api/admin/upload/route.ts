@@ -6,17 +6,21 @@ const ALLOWED_TYPES = new Set(["image/jpeg", "image/png", "image/webp"]);
 const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
 
 // Magic byte signatures for allowed image types
-const MAGIC_BYTES: [Uint8Array, string][] = [
-  [new Uint8Array([0xff, 0xd8, 0xff]), "image/jpeg"],
-  [new Uint8Array([0x89, 0x50, 0x4e, 0x47]), "image/png"],
-  [new Uint8Array([0x52, 0x49, 0x46, 0x46]), "image/webp"], // RIFF header
-];
-
+// Magic byte signatures for allowed image types
 function detectMimeType(buffer: Buffer): string | null {
-  for (const [magic, mime] of MAGIC_BYTES) {
-    if (buffer.length >= magic.length && magic.every((b, i) => buffer[i] === b)) {
-      return mime;
-    }
+  if (buffer.length >= 3 && buffer[0] === 0xff && buffer[1] === 0xd8 && buffer[2] === 0xff) {
+    return "image/jpeg";
+  }
+  if (buffer.length >= 4 && buffer[0] === 0x89 && buffer[1] === 0x50 && buffer[2] === 0x4e && buffer[3] === 0x47) {
+    return "image/png";
+  }
+  // WebP: RIFF header at 0-3 + "WEBP" at bytes 8-11
+  if (
+    buffer.length >= 12 &&
+    buffer[0] === 0x52 && buffer[1] === 0x49 && buffer[2] === 0x46 && buffer[3] === 0x46 &&
+    buffer[8] === 0x57 && buffer[9] === 0x45 && buffer[10] === 0x42 && buffer[11] === 0x50
+  ) {
+    return "image/webp";
   }
   return null;
 }

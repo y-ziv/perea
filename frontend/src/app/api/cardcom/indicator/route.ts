@@ -57,7 +57,7 @@ export async function POST(request: Request) {
       console.error(
         `Indicator: no order found for lpCode=${lowProfileCode} returnValue=${returnValue}`
       );
-      return NextResponse.json({ status: "ok" });
+      return NextResponse.json({ status: "error", reason: "order not found" }, { status: 500 });
     }
 
     // Primary verification: check the webhook payload itself.

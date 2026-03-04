@@ -38,7 +38,7 @@ export const wineUpdateSchema = wineSchema.omit({ slug: true }).partial().refine
 // --- Checkout ---
 
 const checkoutItemSchema = z.object({
-  wineSlug: z.string().min(1).max(100).regex(/^[a-z0-9-]+$/),
+  wineSlug: z.string().min(1).max(100).regex(/^[a-z0-9]+(-[a-z0-9]+)*$/, "Invalid wine slug"),
   quantity: z.number().int().min(1).max(100),
 });
 

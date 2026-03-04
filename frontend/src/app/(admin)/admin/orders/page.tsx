@@ -68,7 +68,7 @@ export default async function AdminOrdersPage({
         ))}
       </div>
 
-      <div className="mt-6 overflow-hidden rounded border border-warm">
+      <div className="mt-6 overflow-x-auto rounded border border-warm">
         <table className="w-full">
           <thead className="bg-primary">
             <tr className="text-start text-caption text-cream-muted">

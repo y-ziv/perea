@@ -1,12 +1,6 @@
 import { auth } from "@/lib/auth";
 import { NextResponse } from "next/server";
-import { getAllowedEmails } from "@/lib/allowed-emails";
-
-function isAdmin(email?: string | null): boolean {
-  if (!email) return false;
-  const allowed = getAllowedEmails();
-  return allowed.length > 0 && allowed.includes(email.toLowerCase());
-}
+import { isAdminEmail } from "@/lib/allowed-emails";
 
 export const proxy = auth((req) => {
   const { pathname } = req.nextUrl;
@@ -16,14 +10,14 @@ export const proxy = auth((req) => {
     if (!req.auth) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
-    if (!isAdmin(req.auth.user?.email)) {
+    if (!isAdminEmail(req.auth.user?.email)) {
       return NextResponse.json({ error: "Forbidden" }, { status: 403 });
     }
   }
 
   // Admin pages: redirect to login if not authenticated or not admin
   if (pathname.startsWith("/admin") && !pathname.startsWith("/admin/login")) {
-    if (!req.auth || !isAdmin(req.auth.user?.email)) {
+    if (!req.auth || !isAdminEmail(req.auth.user?.email)) {
       return NextResponse.redirect(new URL("/admin/login", req.url));
     }
   }

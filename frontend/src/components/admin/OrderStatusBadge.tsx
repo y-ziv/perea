@@ -7,7 +7,7 @@ const statusConfig = {
 type OrderStatus = "PENDING" | "PAID" | "FAILED";
 
 export function OrderStatusBadge({ status }: { status: OrderStatus }) {
-  const config = statusConfig[status];
+  const config = statusConfig[status] ?? { label: status, className: "bg-gray-100 text-gray-800" };
 
   return (
     <span

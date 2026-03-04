@@ -16,6 +16,7 @@ export async function getFeaturedWines(): Promise<WineType[]> {
 }
 
 export async function getWineBySlug(slug: string): Promise<WineType | null> {
+  if (typeof slug !== "string" || !/^[a-z0-9]+(-[a-z0-9]+)*$/.test(slug)) return null;
   await connectDB();
   return Wine.findOne({ slug }).lean<WineType | null>();
 }

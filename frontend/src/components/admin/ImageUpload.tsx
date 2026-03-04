@@ -62,6 +62,7 @@ export function ImageUpload({ value, onChange }: ImageUploadProps) {
         accept="image/jpeg,image/png,image/webp"
         onChange={handleUpload}
         className="hidden"
+        aria-label="העלאת תמונה"
       />
       <button
         type="button"

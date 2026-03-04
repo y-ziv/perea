@@ -28,7 +28,7 @@ const nextConfig: NextConfig = {
             key: "Content-Security-Policy",
             value: [
               "default-src 'self'",
-              "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://secure.cardcom.solutions",
+              "script-src 'self' 'unsafe-inline' https://secure.cardcom.solutions",
               "style-src 'self' 'unsafe-inline'",
               "img-src 'self' data: https://res.cloudinary.com https://lh3.googleusercontent.com",
               "font-src 'self'",

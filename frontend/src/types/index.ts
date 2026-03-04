@@ -8,7 +8,6 @@ export interface Wine {
   _id: string;
   slug: string;
   name: string;
-  nameHe?: string;
   winery: string;
   region: WineRegion;
   country: WineCountry;
@@ -16,7 +15,6 @@ export interface Wine {
   grape: string;
   year?: number;
   description: string;
-  descriptionHe?: string;
   image: string;
   featured: boolean;
   priceAgorot: number;

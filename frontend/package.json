@@ -6,8 +6,7 @@
     "dev": "next dev --port 4001",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint",
-    "seed": "npx tsx scripts/seed.ts"
+    "lint": "eslint"
   },
   "dependencies": {
     "cloudinary": "^2.9.0",

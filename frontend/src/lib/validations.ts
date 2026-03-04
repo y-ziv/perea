@@ -11,7 +11,7 @@ export const slugSchema = z
 
 export const wineSchema = z.object({
   name: z.string().min(1),
-  nameHe: z.string().optional(),
+
   slug: slugSchema,
   winery: z.string().min(1),
   region: z.enum(["galilee", "northern-greece"]),
@@ -20,7 +20,7 @@ export const wineSchema = z.object({
   grape: z.string().min(1),
   year: z.number().int().min(1900).max(2100).optional(),
   description: z.string().min(1),
-  descriptionHe: z.string().optional(),
+
   image: z.string().url("Image must be a valid URL").optional(),
   priceAgorot: z.number().int().min(1, "Price must be at least 1 agora"),
   stock: z.number().int().min(0),

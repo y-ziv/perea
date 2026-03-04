@@ -18,7 +18,7 @@ export default async function EditWinePage({
   const initialData = {
     slug: wine.slug,
     name: wine.name,
-    nameHe: wine.nameHe ?? "",
+
     winery: wine.winery,
     region: wine.region,
     country: wine.country,
@@ -26,7 +26,7 @@ export default async function EditWinePage({
     grape: wine.grape,
     year: wine.year ? String(wine.year) : "",
     description: wine.description,
-    descriptionHe: wine.descriptionHe ?? "",
+
     image: wine.image,
     featured: wine.featured,
     priceAgorot: wine.priceAgorot,

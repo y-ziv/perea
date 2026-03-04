@@ -8,7 +8,7 @@ import { ImageUpload } from "./ImageUpload";
 interface WineFormData {
   slug: string;
   name: string;
-  nameHe: string;
+
   winery: string;
   region: string;
   country: string;
@@ -16,7 +16,7 @@ interface WineFormData {
   grape: string;
   year: string;
   description: string;
-  descriptionHe: string;
+
   image: string;
   featured: boolean;
   priceAgorot: number;
@@ -34,7 +34,7 @@ export function WineForm({ initialData, mode }: WineFormProps) {
   const [form, setForm] = useState<WineFormData>({
     slug: initialData?.slug ?? "",
     name: initialData?.name ?? "",
-    nameHe: initialData?.nameHe ?? "",
+
     winery: initialData?.winery ?? "",
     region: initialData?.region ?? "galilee",
     country: initialData?.country ?? "Israel",
@@ -42,7 +42,7 @@ export function WineForm({ initialData, mode }: WineFormProps) {
     grape: initialData?.grape ?? "",
     year: initialData?.year ?? "",
     description: initialData?.description ?? "",
-    descriptionHe: initialData?.descriptionHe ?? "",
+
     image: initialData?.image ?? "",
     featured: initialData?.featured ?? false,
     priceAgorot: initialData?.priceAgorot ?? 0,
@@ -124,15 +124,6 @@ export function WineForm({ initialData, mode }: WineFormProps) {
       </div>
 
       <div className="grid grid-cols-2 gap-4">
-        <div>
-          <label htmlFor="wine-nameHe" className={labelClass}>שם בעברית</label>
-          <input
-            id="wine-nameHe"
-            className={inputClass}
-            value={form.nameHe}
-            onChange={(e) => updateField("nameHe", e.target.value)}
-          />
-        </div>
         <div>
           <label htmlFor="wine-winery" className={labelClass}>יקב</label>
           <input
@@ -217,16 +208,6 @@ export function WineForm({ initialData, mode }: WineFormProps) {
           value={form.description}
           onChange={(e) => updateField("description", e.target.value)}
           required
-        />
-      </div>
-
-      <div>
-        <label htmlFor="wine-descriptionHe" className={labelClass}>תיאור בעברית</label>
-        <textarea
-          id="wine-descriptionHe"
-          className={`${inputClass} h-24 resize-none`}
-          value={form.descriptionHe}
-          onChange={(e) => updateField("descriptionHe", e.target.value)}
         />
       </div>
 

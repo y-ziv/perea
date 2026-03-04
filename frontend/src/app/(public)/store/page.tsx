@@ -36,7 +36,7 @@ export default async function WinePage() {
             אין יינות זמינים כרגע. בקרו שוב בקרוב!
           </p>
         ) : (
-          <WineGrid wines={wines} />
+          <WineGrid wines={JSON.parse(JSON.stringify(wines))} />
         )}
       </div>
     </section>

@@ -1,8 +1,8 @@
-import { getFeaturedWines } from "@/lib/wines";
+import { getAllWines } from "@/lib/wines";
 import { FeaturedWinesClient } from "./FeaturedWinesClient";
 
 export async function FeaturedWinesSection() {
-  const wines = await getFeaturedWines();
+  const wines = await getAllWines();
 
   const winesData = wines.map((w) => ({
     slug: w.slug,

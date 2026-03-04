@@ -60,7 +60,7 @@ export function FeaturedWinesClient({ wines }: { wines: FeaturedWine[] }) {
     const card = el.querySelector<HTMLElement>("[data-wine-card]");
     if (!card) return;
     const distance = card.offsetWidth + 16;
-    el.scrollBy({ left: dir * distance, behavior: "smooth" });
+    el.scrollBy({ left: -dir * distance, behavior: "smooth" });
   }, []);
 
   if (wines.length === 0) return null;
@@ -69,8 +69,8 @@ export function FeaturedWinesClient({ wines }: { wines: FeaturedWine[] }) {
     <section className="bg-secondary py-10 sm:py-14">
       <div className="mx-auto max-w-6xl px-4 sm:px-6">
         <SectionHeading
-          overline="יינות נבחרים"
-          heading="מהאוסף שלנו"
+          overline="מהחנות שלנו"
+          heading="טעמו את המבחר"
           align="center"
           className="mb-6 sm:mb-10"
         />
@@ -78,6 +78,7 @@ export function FeaturedWinesClient({ wines }: { wines: FeaturedWine[] }) {
         <div className="-mx-4 sm:-mx-6">
           <div
             ref={scrollRef}
+            dir="rtl"
             className="no-scrollbar flex snap-x snap-mandatory gap-4 overflow-x-auto px-4 pb-4 sm:gap-6 sm:px-6"
           >
             {wines.map((wine) => (
@@ -96,7 +97,7 @@ export function FeaturedWinesClient({ wines }: { wines: FeaturedWine[] }) {
           <button
             type="button"
             onClick={() => scroll(1)}
-            aria-label="הקודם"
+            aria-label="הבא"
             className="flex items-center justify-center rounded-full border border-copper/30 bg-primary/80 p-3 text-copper transition-all duration-300 hover:border-copper hover:bg-primary"
           >
             <svg
@@ -118,7 +119,7 @@ export function FeaturedWinesClient({ wines }: { wines: FeaturedWine[] }) {
           <button
             type="button"
             onClick={() => scroll(-1)}
-            aria-label="הבא"
+            aria-label="הקודם"
             className="flex items-center justify-center rounded-full border border-copper/30 bg-primary/80 p-3 text-copper transition-all duration-300 hover:border-copper hover:bg-primary"
           >
             <svg
@@ -139,7 +140,7 @@ export function FeaturedWinesClient({ wines }: { wines: FeaturedWine[] }) {
         </div>
 
         <div className="mt-10 text-center sm:mt-14">
-          <Button href="/store">לכל היינות</Button>
+          <Button href="/store">לחנות</Button>
         </div>
       </div>
     </section>

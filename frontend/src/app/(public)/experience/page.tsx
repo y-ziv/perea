@@ -3,8 +3,6 @@ import Image from "next/image";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { Divider } from "@/components/ui/Divider";
 
-const IMG = "/drive-download-20260209T114257Z-1-001";
-
 export const metadata: Metadata = {
   title: "החוויה",
   description:
@@ -26,7 +24,7 @@ export default function ExperiencePage() {
       {/* Daytime */}
       <div className="relative h-80 w-full overflow-hidden sm:h-[28rem]">
         <Image
-          src={`${IMG}/0Y1A2295 copy.jpg`}
+          src="/images/perea day.jpg"
           alt="חנות יין וטעימות בפראה"
           fill
           className="object-cover"
@@ -56,7 +54,7 @@ export default function ExperiencePage() {
       {/* Evening */}
       <div className="relative mt-20 h-80 w-full overflow-hidden sm:h-[28rem]">
         <Image
-          src={`${IMG}/0Y1A2298 copy.jpg`}
+          src="/images/perea night.jpg"
           alt="ביסטרו יין בפראה"
           fill
           className="object-cover"

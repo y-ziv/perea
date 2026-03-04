@@ -93,7 +93,7 @@ export function StoryIntro() {
         </div>
 
         {/* Content area: PEREA WINE HOUSE diagonal on left, text on right */}
-        <div className="relative mb-14 min-h-[22rem]">
+        <div className="relative mb-6 min-h-64">
           {/* PEREA WINE HOUSE — diagonal decorative text, left side */}
           <div className="pointer-events-none absolute inset-0 hidden items-start justify-start  md:flex" dir="ltr">
             <p
@@ -143,49 +143,14 @@ export function StoryIntro() {
             ))}
           </div>
 
-          {/* Doodle overlays — spilling left into background and over photos */}
-          <div className="pointer-events-none absolute inset-0 -left-24 sm:-left-32">
+          {/* Doodle overlay — single image spilling left */}
+          <div className="pointer-events-none absolute inset-y-0 -left-20 w-72 sm:-left-24 sm:w-80">
             <Image
-              src="/doodles/grapes.png"
+              src="/doodles/our-story-doodle4.png"
               alt=""
-              width={120}
-              height={120}
-              className="absolute top-[2%] left-0 h-28 w-28 brightness-0 invert sm:h-36 sm:w-36"
-            />
-            <Image
-              src="/doodles/wine-bottle.png"
-              alt=""
-              width={80}
-              height={160}
-              className="absolute top-[20%] left-[6%] h-40 w-auto brightness-0 invert sm:h-48"
-            />
-            <Image
-              src="/doodles/cheese.png"
-              alt=""
-              width={100}
-              height={100}
-              className="absolute top-[15%] left-[16%] h-24 w-24 brightness-0 invert sm:h-32 sm:w-32"
-            />
-            <Image
-              src="/doodles/bread.png"
-              alt=""
-              width={120}
-              height={120}
-              className="absolute top-[42%] left-[2%] h-28 w-28 brightness-0 invert sm:h-36 sm:w-36"
-            />
-            <Image
-              src="/doodles/candle.png"
-              alt=""
-              width={60}
-              height={140}
-              className="absolute top-[38%] left-[14%] h-40 w-auto brightness-0 invert sm:h-48"
-            />
-            <Image
-              src="/doodles/vase.png"
-              alt=""
-              width={100}
-              height={120}
-              className="absolute top-[62%] left-[4%] h-36 w-auto brightness-0 invert sm:h-44"
+              width={400}
+              height={800}
+              className="h-full w-full object-contain object-left brightness-0 invert"
             />
           </div>
         </div>

@@ -1,6 +1,7 @@
 import { auth } from "@/lib/auth";
 import { redirect } from "next/navigation";
 import { AdminSidebar } from "@/components/admin/AdminSidebar";
+import { getAllowedEmails } from "@/lib/allowed-emails";
 
 export default async function AdminLayout({
   children,
@@ -8,7 +9,11 @@ export default async function AdminLayout({
   children: React.ReactNode;
 }) {
   const session = await auth();
-  if (!session) redirect("/admin/login");
+  const email = session?.user?.email?.toLowerCase();
+  const allowed = getAllowedEmails();
+  if (!session || !email || (allowed.length > 0 && !allowed.includes(email))) {
+    redirect("/admin/login");
+  }
 
   return (
     <div className="min-h-screen bg-secondary" dir="rtl">

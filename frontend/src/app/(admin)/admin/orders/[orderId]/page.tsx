@@ -2,6 +2,7 @@ import { connectDB } from "@/lib/mongodb";
 import { Order, type IOrderItem } from "@/models/Order";
 import { formatPrice } from "@/lib/format";
 import { OrderStatusBadge } from "@/components/admin/OrderStatusBadge";
+import { orderIdSchema } from "@/lib/validations";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 
@@ -11,8 +12,10 @@ export default async function OrderDetailPage({
   params: Promise<{ orderId: string }>;
 }) {
   const { orderId } = await params;
+  const parsed = orderIdSchema.safeParse(orderId);
+  if (!parsed.success) notFound();
   await connectDB();
-  const order = await Order.findOne({ orderId }).lean();
+  const order = await Order.findOne({ orderId: parsed.data }).lean();
 
   if (!order) notFound();
 

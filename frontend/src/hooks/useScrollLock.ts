@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect } from "react";
 
 // Store lock count on the DOM element itself to avoid module-level state
 // that can desync across hot-reloads or multiple bundles.
@@ -16,19 +16,9 @@ function setLockCount(count: number) {
 }
 
 export function useScrollLock(locked: boolean) {
-  const isLocked = useRef(false);
-
   useEffect(() => {
-    if (locked && !isLocked.current) {
-      isLocked.current = true;
-      setLockCount(getLockCount() + 1);
-    }
-
-    return () => {
-      if (isLocked.current) {
-        isLocked.current = false;
-        setLockCount(Math.max(0, getLockCount() - 1));
-      }
-    };
+    if (!locked) return;
+    setLockCount(getLockCount() + 1);
+    return () => setLockCount(Math.max(0, getLockCount() - 1));
   }, [locked]);
 }

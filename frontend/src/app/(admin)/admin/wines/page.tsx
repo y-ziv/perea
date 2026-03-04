@@ -7,7 +7,7 @@ import { DeleteButton } from "@/components/admin/DeleteButton";
 
 export default async function AdminWinesPage() {
   await connectDB();
-  const wines = await Wine.find().sort({ createdAt: -1 }).lean();
+  const wines = await Wine.find().sort({ createdAt: -1 }).limit(500).lean();
 
   return (
     <div>

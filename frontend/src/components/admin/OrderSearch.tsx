@@ -9,6 +9,11 @@ export function OrderSearch() {
   const [query, setQuery] = useState(searchParams.get("q") ?? "");
   const timerRef = useRef<ReturnType<typeof setTimeout>>(undefined);
 
+  // Sync local state when URL searchParams change externally (e.g. tab click)
+  useEffect(() => {
+    setQuery(searchParams.get("q") ?? "");
+  }, [searchParams]);
+
   const navigate = useCallback(
     (value: string) => {
       const params = new URLSearchParams(searchParams.toString());

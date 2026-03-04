@@ -2,6 +2,7 @@ import { connectDB } from "@/lib/mongodb";
 import { Wine } from "@/models/Wine";
 import { WineForm } from "@/components/admin/WineForm";
 import { DeleteButton } from "@/components/admin/DeleteButton";
+import { slugSchema } from "@/lib/validations";
 import { notFound } from "next/navigation";
 
 export default async function EditWinePage({
@@ -10,8 +11,10 @@ export default async function EditWinePage({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
+  const parsed = slugSchema.safeParse(slug);
+  if (!parsed.success) notFound();
   await connectDB();
-  const wine = await Wine.findOne({ slug }).lean();
+  const wine = await Wine.findOne({ slug: parsed.data }).lean();
 
   if (!wine) notFound();
 

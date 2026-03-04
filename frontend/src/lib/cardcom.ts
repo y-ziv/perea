@@ -127,15 +127,10 @@ export async function getLowProfileResult(
   });
 
   // Cardcom v11 returns DealResponse=0 for approved deals.
-  // Use loose equality (==) because Cardcom may return string "0" or number 0.
-  // Also check ResponseCode as a fallback — some terminal configs use it instead.
+  // Only trust DealResponse — ResponseCode alone is not sufficient proof of approval.
   const dealResponse = data.DealResponse ?? data.dealResponse;
-  const responseCode = data.ResponseCode ?? data.responseCode;
 
-  const approved =
-    dealResponse === 0 || dealResponse === "0" ||
-    ((responseCode === 0 || responseCode === "0") &&
-      Number(data.InternalDealNumber || data.internalDealNumber || 0) > 0);
+  const approved = dealResponse === 0 || dealResponse === "0";
 
   return {
     approved,

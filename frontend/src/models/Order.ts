@@ -81,7 +81,7 @@ const OrderSchema = new Schema<IOrder>(
 );
 
 OrderSchema.index({ status: 1, createdAt: -1 });
-OrderSchema.index({ lowProfileCode: 1 });
+OrderSchema.index({ lowProfileCode: 1 }, { unique: true, sparse: true });
 
 export const Order =
   (mongoose.models.Order as mongoose.Model<IOrder>) ||

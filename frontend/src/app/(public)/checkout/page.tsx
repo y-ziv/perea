@@ -101,7 +101,7 @@ export default function CheckoutPage() {
           })),
           customer: {
             name: form.name,
-            phone: form.phone,
+            phone: form.phone.replace(/[\s\-()]/g, ""),
             email: form.email,
             address: form.deliveryMethod === "shipping" ? form.address : undefined,
             notes: form.notes || undefined,

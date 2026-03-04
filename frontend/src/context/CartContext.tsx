@@ -35,14 +35,18 @@ function loadCart(): CartItem[] {
     const parsed = JSON.parse(stored);
     if (!Array.isArray(parsed)) return [];
     return parsed.filter(
-      (item: unknown): item is CartItem =>
-        typeof item === "object" &&
-        item !== null &&
-        "wineSlug" in item &&
-        "quantity" in item &&
-        "priceAgorot" in item &&
-        "name" in item &&
-        "image" in item
+      (item: unknown): item is CartItem => {
+        if (typeof item !== "object" || item === null) return false;
+        const o = item as Record<string, unknown>;
+        return (
+          typeof o.wineSlug === "string" &&
+          typeof o.name === "string" &&
+          typeof o.image === "string" &&
+          typeof o.quantity === "number" && Number.isFinite(o.quantity) && o.quantity > 0 &&
+          typeof o.priceAgorot === "number" && Number.isFinite(o.priceAgorot) && o.priceAgorot > 0 &&
+          typeof o.stock === "number"
+        );
+      }
     );
   } catch {
     return [];

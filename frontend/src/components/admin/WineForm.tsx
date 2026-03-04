@@ -23,10 +23,9 @@ interface WineFormData {
   stock: number;
 }
 
-interface WineFormProps {
-  initialData?: Partial<WineFormData>;
-  mode: "create" | "edit";
-}
+type WineFormProps =
+  | { mode: "create"; initialData?: undefined }
+  | { mode: "edit"; initialData: WineFormData };
 
 export function WineForm({ initialData, mode }: WineFormProps) {
   const router = useRouter();

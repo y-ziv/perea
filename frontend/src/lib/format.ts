@@ -3,5 +3,5 @@
  * 18900 → "₪189.00"
  */
 export function formatPrice(agorot: number): string {
-  return `₪${(agorot / 100).toFixed(2)}`;
+  return `₪${(Math.round(agorot) / 100).toFixed(2)}`;
 }

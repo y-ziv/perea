@@ -12,7 +12,7 @@ export async function getAllWines(): Promise<WineType[]> {
 
 export async function getFeaturedWines(): Promise<WineType[]> {
   await connectDB();
-  return Wine.find({ featured: true, stock: { $gt: 0 } }).lean<WineType[]>();
+  return Wine.find({ featured: true, stock: { $gt: 0 } }).limit(20).lean<WineType[]>();
 }
 
 export async function getWineBySlug(slug: string): Promise<WineType | null> {

@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { cn } from "@/lib/cn";
 
 type ButtonProps = {
   children: React.ReactNode;
@@ -11,10 +12,10 @@ type ButtonProps = {
 const baseClass =
   "inline-block border border-copper px-8 py-3 text-caption font-medium tracking-wide text-copper transition-colors duration-300 hover:bg-copper hover:text-primary disabled:cursor-not-allowed disabled:opacity-50";
 
-export function Button({ href, onClick, disabled, type = "button", children, className = "" }: ButtonProps) {
+export function Button({ href, onClick, disabled, type = "button", children, className }: ButtonProps) {
   if (href) {
     return (
-      <Link href={href} className={`${baseClass} ${className}`}>
+      <Link href={href} className={cn(baseClass, className)}>
         {children}
       </Link>
     );
@@ -25,7 +26,7 @@ export function Button({ href, onClick, disabled, type = "button", children, cla
       type={type}
       onClick={onClick}
       disabled={disabled}
-      className={`${baseClass} ${className}`}
+      className={cn(baseClass, className)}
     >
       {children}
     </button>

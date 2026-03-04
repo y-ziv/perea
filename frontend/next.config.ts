@@ -8,7 +8,7 @@ const nextConfig: NextConfig = {
       {
         protocol: "https",
         hostname: "res.cloudinary.com",
-        pathname: `/${process.env.CLOUDINARY_CLOUD_NAME || "**"}/**`,
+        pathname: `/${process.env.CLOUDINARY_CLOUD_NAME ?? ""}/**`,
       },
     ],
   },
@@ -23,6 +23,20 @@ const nextConfig: NextConfig = {
           {
             key: "Strict-Transport-Security",
             value: "max-age=63072000; includeSubDomains; preload",
+          },
+          {
+            key: "Content-Security-Policy",
+            value: [
+              "default-src 'self'",
+              "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://secure.cardcom.solutions",
+              "style-src 'self' 'unsafe-inline'",
+              "img-src 'self' data: https://res.cloudinary.com https://lh3.googleusercontent.com",
+              "font-src 'self'",
+              "frame-src https://secure.cardcom.solutions",
+              "connect-src 'self' https://secure.cardcom.solutions",
+              "base-uri 'self'",
+              "form-action 'self'",
+            ].join("; "),
           },
         ],
       },

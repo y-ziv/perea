@@ -1,6 +1,7 @@
 import { connectDB } from "@/lib/mongodb";
 import { Order } from "@/models/Order";
 import { formatPrice } from "@/lib/format";
+import { orderStatusSchema } from "@/lib/validations";
 import { OrderStatusBadge } from "@/components/admin/OrderStatusBadge";
 import { DeleteButton } from "@/components/admin/DeleteButton";
 import { OrderSearch } from "@/components/admin/OrderSearch";
@@ -21,7 +22,8 @@ export default async function AdminOrdersPage({
   await connectDB();
 
   const filter: Record<string, unknown> = {};
-  if (status) filter.status = status;
+  const parsedStatus = orderStatusSchema.safeParse(status);
+  if (parsedStatus.success && parsedStatus.data) filter.status = parsedStatus.data;
   if (q) {
     const escaped = escapeRegex(q);
     const regex = { $regex: escaped, $options: "i" };

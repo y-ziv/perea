@@ -158,6 +158,7 @@ export async function POST(request: Request) {
     }
   } catch (err) {
     console.error("Indicator error:", err);
+    return NextResponse.json({ status: "error" }, { status: 500 });
   }
 
   return NextResponse.json({ status: "ok" });

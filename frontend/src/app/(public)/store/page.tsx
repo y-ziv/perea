@@ -1,8 +1,7 @@
 import type { Metadata } from "next";
-import Image from "next/image";
 import { SectionHeading } from "@/components/ui/SectionHeading";
+import { WineCard } from "@/components/store/WineCard";
 import { getAllWines } from "@/lib/wines";
-import { formatPrice } from "@/lib/format";
 
 export const metadata: Metadata = {
   title: "החנות",
@@ -28,33 +27,19 @@ export default async function WinePage() {
 
         <div className="grid gap-8 sm:grid-cols-2 sm:gap-10 lg:grid-cols-3">
           {wines.map((wine) => (
-            <div key={wine.slug} className="group">
-              <div className="relative mb-4 h-56 overflow-hidden rounded-sm sm:mb-6 sm:h-72">
-                <Image
-                  src={wine.image}
-                  alt={wine.name}
-                  fill
-                  className="object-cover transition-transform duration-500 group-hover:scale-105"
-                />
-              </div>
-              <p className="overline mb-1">
-                {wine.country === "Greece" ? "יוון" : "ישראל"} · {wine.grape}
-              </p>
-              <h3 className="font-sans text-body-lg font-medium text-cream sm:text-h4">
-                {wine.name}
-              </h3>
-              <p className="mt-1 text-caption text-cream-muted">
-                {wine.winery} {wine.year && `· ${wine.year}`}
-              </p>
-              {wine.priceAgorot > 0 && (
-                <p className="mt-1 text-body font-medium text-copper">
-                  {formatPrice(wine.priceAgorot)}
-                </p>
-              )}
-              <p className="mt-2 text-body font-light leading-relaxed text-cream-muted sm:mt-3">
-                {wine.description}
-              </p>
-            </div>
+            <WineCard
+              key={wine.slug}
+              slug={wine.slug}
+              name={wine.name}
+              winery={wine.winery}
+              country={wine.country}
+              grape={wine.grape}
+              year={wine.year}
+              description={wine.description}
+              image={wine.image}
+              priceAgorot={wine.priceAgorot}
+              stock={wine.stock}
+            />
           ))}
         </div>
       </div>

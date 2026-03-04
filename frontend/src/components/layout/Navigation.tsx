@@ -7,6 +7,7 @@ import { usePathname } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { navigation } from "@/data/navigation";
 import { MenuModal } from "@/components/ui/MenuModal";
+import { CartButton } from "./CartButton";
 
 export function Navigation() {
   const [scrolled, setScrolled] = useState(false);
@@ -63,31 +64,37 @@ export function Navigation() {
             })}
           </ul>
 
-          {/* Mobile toggle */}
-          <button
-            onClick={() => setMobileOpen(!mobileOpen)}
-            className="relative z-50 flex h-8 w-8 flex-col items-center justify-center gap-1.5 sm:hidden"
-            aria-label={mobileOpen ? "סגור תפריט" : "פתח תפריט"}
-          >
-            <span
-              className={`h-px w-6 bg-cream transition-all duration-300 ${
-                mobileOpen ? "translate-y-[3.5px] rotate-45" : ""
-              }`}
-            />
-            <span
-              className={`h-px w-6 bg-cream transition-all duration-300 ${
-                mobileOpen ? "-translate-y-[3.5px] -rotate-45" : ""
-              }`}
-            />
-          </button>
+          {/* Mobile toggle + cart */}
+          <div className="relative z-50 flex items-center gap-4 sm:hidden">
+            <button
+              onClick={() => setMobileOpen(!mobileOpen)}
+              className="flex h-8 w-8 flex-col items-center justify-center gap-1.5"
+              aria-label={mobileOpen ? "סגור תפריט" : "פתח תפריט"}
+            >
+              <span
+                className={`h-px w-6 bg-cream transition-all duration-300 ${
+                  mobileOpen ? "translate-y-[3.5px] rotate-45" : ""
+                }`}
+              />
+              <span
+                className={`h-px w-6 bg-cream transition-all duration-300 ${
+                  mobileOpen ? "-translate-y-[3.5px] -rotate-45" : ""
+                }`}
+              />
+            </button>
+            <CartButton />
+          </div>
 
-          {/* Menu button — desktop only */}
-          <button
-            onClick={() => setMenuOpen(true)}
-            className="absolute right-6 top-1/2 hidden -translate-y-1/2 items-center gap-2 rounded-full bg-primary/60 px-5 py-2 text-caption tracking-wide text-copper backdrop-blur-sm transition-all duration-300 hover:bg-copper hover:text-primary sm:flex"
-          >
-            תפריט
-          </button>
+          {/* Menu + Cart buttons — desktop only */}
+          <div className="absolute right-6 top-1/2 hidden -translate-y-1/2 items-center gap-3 sm:flex">
+            <CartButton />
+            <button
+              onClick={() => setMenuOpen(true)}
+              className="flex items-center gap-2 rounded-full bg-primary/60 px-5 py-2 text-caption tracking-wide text-copper backdrop-blur-sm transition-all duration-300 hover:bg-copper hover:text-primary"
+            >
+              תפריט
+            </button>
+          </div>
 
           {/* Logo — aligned to the left manually via absolute positioning on desktop */}
           <Link

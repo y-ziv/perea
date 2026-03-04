@@ -1,18 +1,33 @@
 import Link from "next/link";
 
-interface ButtonProps {
-  href: string;
+type ButtonProps = {
   children: React.ReactNode;
   className?: string;
-}
+} & (
+  | { href: string; onClick?: never; disabled?: never; type?: never }
+  | { href?: never; onClick?: () => void; disabled?: boolean; type?: "button" | "submit" }
+);
 
-export function Button({ href, children, className = "" }: ButtonProps) {
+const baseClass =
+  "inline-block border border-copper px-8 py-3 text-caption font-medium tracking-wide text-copper transition-colors duration-300 hover:bg-copper hover:text-primary disabled:cursor-not-allowed disabled:opacity-50";
+
+export function Button({ href, onClick, disabled, type = "button", children, className = "" }: ButtonProps) {
+  if (href) {
+    return (
+      <Link href={href} className={`${baseClass} ${className}`}>
+        {children}
+      </Link>
+    );
+  }
+
   return (
-    <Link
-      href={href}
-      className={`inline-block border border-copper px-8 py-3 text-caption font-medium tracking-wide text-copper transition-colors duration-300 hover:bg-copper hover:text-primary ${className}`}
+    <button
+      type={type}
+      onClick={onClick}
+      disabled={disabled}
+      className={`${baseClass} ${className}`}
     >
       {children}
-    </Link>
+    </button>
   );
 }

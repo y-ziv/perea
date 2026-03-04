@@ -34,7 +34,7 @@ const OrderItemSchema = new Schema<IOrderItem>(
     wineSlug: { type: String, required: true },
     name: { type: String, required: true },
     priceAgorot: { type: Number, required: true, min: 0 },
-    quantity: { type: Number, required: true, min: 1, max: 10000 },
+    quantity: { type: Number, required: true, min: 1, max: 100 },
   },
   { _id: false }
 );
@@ -79,6 +79,9 @@ const OrderSchema = new Schema<IOrder>(
   },
   { timestamps: true }
 );
+
+OrderSchema.index({ status: 1, createdAt: -1 });
+OrderSchema.index({ lowProfileCode: 1 });
 
 export const Order =
   (mongoose.models.Order as mongoose.Model<IOrder>) ||

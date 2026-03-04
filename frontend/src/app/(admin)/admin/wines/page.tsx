@@ -40,6 +40,7 @@ export default async function AdminWinesPage() {
                       src={wine.image}
                       alt={wine.name}
                       fill
+                      sizes="48px"
                       className="object-cover"
                     />
                   </div>

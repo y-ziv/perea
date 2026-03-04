@@ -14,7 +14,7 @@ export function AdminSidebar() {
   const pathname = usePathname();
 
   return (
-    <aside className="fixed right-0 top-0 z-40 flex h-screen w-56 flex-col border-l border-warm bg-primary">
+    <aside aria-label="ניווט ניהול" className="fixed right-0 top-0 z-40 hidden h-screen w-56 flex-col border-l border-warm bg-primary md:flex">
       <div className="border-b border-warm px-6 py-5">
         <Link href="/admin" className="font-heading-secondary text-h4 text-copper">
           פריאה ניהול

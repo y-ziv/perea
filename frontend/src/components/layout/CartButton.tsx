@@ -7,6 +7,7 @@ export function CartButton() {
 
   return (
     <button
+      type="button"
       onClick={openCart}
       className="relative text-copper transition-colors hover:text-copper-light"
       aria-label="עגלת קניות"

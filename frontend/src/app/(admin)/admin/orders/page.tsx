@@ -7,6 +7,11 @@ import { OrderSearch } from "@/components/admin/OrderSearch";
 import Link from "next/link";
 import { Suspense } from "react";
 
+/** Escape regex special characters to prevent ReDoS. */
+function escapeRegex(str: string) {
+  return str.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+}
+
 export default async function AdminOrdersPage({
   searchParams,
 }: {
@@ -14,11 +19,6 @@ export default async function AdminOrdersPage({
 }) {
   const { status, q } = await searchParams;
   await connectDB();
-
-  // Escape regex special characters to prevent ReDoS
-  function escapeRegex(str: string) {
-    return str.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-  }
 
   const filter: Record<string, unknown> = {};
   if (status) filter.status = status;

@@ -1,11 +1,12 @@
 "use client";
 
+import { memo } from "react";
 import Image from "next/image";
 import { useCart } from "@/context/CartContext";
 import { formatPrice } from "@/lib/format";
 import type { CartItem } from "@/types";
 
-export function CartItemRow({ item }: { item: CartItem }) {
+export const CartItemRow = memo(function CartItemRow({ item }: { item: CartItem }) {
   const { updateQuantity, removeItem } = useCart();
 
   return (
@@ -70,4 +71,4 @@ export function CartItemRow({ item }: { item: CartItem }) {
       </div>
     </div>
   );
-}
+});

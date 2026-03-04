@@ -5,6 +5,7 @@ import { useCart } from "@/context/CartContext";
 import { formatPrice } from "@/lib/format";
 import Image from "next/image";
 import Link from "next/link";
+import type { DeliveryMethod } from "@/types";
 
 export default function CheckoutPage() {
   const { items, totalAgorot } = useCart();
@@ -17,12 +18,12 @@ export default function CheckoutPage() {
     email: "",
     address: "",
     notes: "",
-    deliveryMethod: "pickup" as "pickup" | "shipping",
+    deliveryMethod: "pickup" as DeliveryMethod,
   });
 
   const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
 
-  function updateField(key: string, value: string) {
+  function updateField(key: keyof typeof form, value: string) {
     setForm((prev) => ({ ...prev, [key]: value }));
     setFieldErrors((prev) => {
       const next = { ...prev };
@@ -41,8 +42,8 @@ export default function CheckoutPage() {
       }
       case "phone": {
         const clean = formState.phone.replace(/[\s\-()]/g, "");
-        if (!/^0\d{9}$/.test(clean))
-          return "יש להזין מספר טלפון ישראלי תקין (10 ספרות)";
+        if (!/^0\d{8,9}$/.test(clean))
+          return "יש להזין מספר טלפון ישראלי תקין";
         return null;
       }
       case "email": {
@@ -61,17 +62,17 @@ export default function CheckoutPage() {
   }
 
   function handleBlur(key: string) {
-    const error = validateField(key);
-    if (error) {
-      setFieldErrors((prev) => ({ ...prev, [key]: error }));
+    const fieldError = validateField(key);
+    if (fieldError) {
+      setFieldErrors((prev) => ({ ...prev, [key]: fieldError }));
     }
   }
 
   function validate(): Record<string, string> {
     const errors: Record<string, string> = {};
     for (const key of ["name", "phone", "email", "address"]) {
-      const error = validateField(key);
-      if (error) errors[key] = error;
+      const fieldError = validateField(key);
+      if (fieldError) errors[key] = fieldError;
     }
     return errors;
   }

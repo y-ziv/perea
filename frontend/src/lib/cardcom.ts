@@ -69,7 +69,12 @@ export async function createLowProfile(
     body: JSON.stringify(body),
   });
 
-  const data = await res.json();
+  let data: Record<string, unknown>;
+  try {
+    data = await res.json();
+  } catch {
+    throw new Error(`Cardcom LowProfile returned non-JSON response (HTTP ${res.status})`);
+  }
 
   if (!res.ok || data.ResponseCode !== 0) {
     throw new Error(
@@ -78,8 +83,8 @@ export async function createLowProfile(
   }
 
   return {
-    url: data.Url,
-    lowProfileCode: data.LowProfileCode,
+    url: data.Url as string,
+    lowProfileCode: data.LowProfileCode as string,
   };
 }
 
@@ -87,7 +92,7 @@ export interface LpResult {
   approved: boolean;
   cardcomTransactionId: string;
   returnValue: string;
-  sumBilled: number;
+  sumBilled: number | null;
 }
 
 export async function getLowProfileResult(
@@ -112,9 +117,13 @@ export async function getLowProfileResult(
 
   const data = await res.json();
 
-  // Log full response for debugging — Cardcom fields can vary between
-  // test terminal (1000) and production, and between API versions.
-  console.info("Cardcom GetLpResult response:", JSON.stringify(data));
+  // Log non-sensitive response fields for debugging
+  console.info("Cardcom GetLpResult:", {
+    ResponseCode: data.ResponseCode,
+    DealResponse: data.DealResponse,
+    InternalDealNumber: data.InternalDealNumber,
+    ReturnValue: data.ReturnValue,
+  });
 
   // Cardcom v11 returns DealResponse=0 for approved deals.
   // Use loose equality (==) because Cardcom may return string "0" or number 0.
@@ -123,15 +132,13 @@ export async function getLowProfileResult(
   const responseCode = data.ResponseCode ?? data.responseCode;
 
   const approved =
-    // eslint-disable-next-line eqeqeq
     dealResponse == 0 ||
-    // eslint-disable-next-line eqeqeq
     (responseCode == 0 && Number(data.InternalDealNumber || data.internalDealNumber || 0) > 0);
 
   return {
     approved,
     cardcomTransactionId: String(data.InternalDealNumber || data.internalDealNumber || ""),
     returnValue: data.ReturnValue || data.returnValue || "",
-    sumBilled: data.Amount ?? data.Sum ?? data.amount ?? 0,
+    sumBilled: data.Amount ?? data.Sum ?? data.amount ?? null,
   };
 }

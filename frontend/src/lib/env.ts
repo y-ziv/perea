@@ -35,6 +35,12 @@ export const env = {
   get CLOUDINARY_API_SECRET() {
     return required("CLOUDINARY_API_SECRET");
   },
+  get AUTH_SECRET() {
+    return required("AUTH_SECRET");
+  },
+  get ADMIN_EMAILS() {
+    return required("ADMIN_EMAILS");
+  },
   get BASE_URL() {
     return required("NEXT_PUBLIC_BASE_URL");
   },

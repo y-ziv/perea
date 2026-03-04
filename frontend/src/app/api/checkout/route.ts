@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { randomUUID } from "crypto";
 import { connectDB } from "@/lib/mongodb";
 import { Wine } from "@/models/Wine";
-import { Order } from "@/models/Order";
+import { Order, type IOrderItem } from "@/models/Order";
 import { createLowProfile } from "@/lib/cardcom";
 import { checkoutBodySchema } from "@/lib/validations";
 import { env } from "@/lib/env";
@@ -17,6 +17,13 @@ async function restoreStock(reserved: { slug: string; quantity: number }[]) {
 }
 
 export async function POST(request: Request) {
+  // CSRF protection: verify the request originates from our own domain
+  const origin = request.headers.get("origin");
+  const baseUrl = env.BASE_URL;
+  if (origin && new URL(origin).origin !== new URL(baseUrl).origin) {
+    return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+  }
+
   try {
     const raw = await request.json();
     const parsed = checkoutBodySchema.safeParse(raw);
@@ -37,7 +44,7 @@ export async function POST(request: Request) {
     const wineMap = new Map(wines.map((w) => [w.slug, w]));
 
     // Validate all wines exist, have price, and atomically reserve stock
-    const orderItems = [];
+    const orderItems: IOrderItem[] = [];
     let totalAgorot = 0;
     const reservedItems: { slug: string; quantity: number }[] = [];
 
@@ -69,7 +76,7 @@ export async function POST(request: Request) {
       if (!reserved) {
         await restoreStock(reservedItems);
         return NextResponse.json(
-          { error: `אין מספיק מלאי עבור ${wine.name}` },
+          { error: `Insufficient stock for ${wine.name}` },
           { status: 400 }
         );
       }

@@ -50,20 +50,12 @@ function loadCart(): CartItem[] {
 }
 
 export function CartProvider({ children }: { children: ReactNode }) {
-  const [items, setItems] = useState<CartItem[]>([]);
+  const [items, setItems] = useState<CartItem[]>(loadCart);
   const [isOpen, setIsOpen] = useState(false);
-  const [loaded, setLoaded] = useState(false);
 
   useEffect(() => {
-    setItems(loadCart());
-    setLoaded(true);
-  }, []);
-
-  useEffect(() => {
-    if (loaded) {
-      localStorage.setItem(CART_KEY, JSON.stringify(items));
-    }
-  }, [items, loaded]);
+    localStorage.setItem(CART_KEY, JSON.stringify(items));
+  }, [items]);
 
   const addItem = useCallback((item: CartItem) => {
     setItems((prev) => {

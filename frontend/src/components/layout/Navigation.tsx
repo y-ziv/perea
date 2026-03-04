@@ -23,6 +23,15 @@ export function Navigation() {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
+  useEffect(() => {
+    if (!mobileOpen) return;
+    function handleKeyDown(e: KeyboardEvent) {
+      if (e.key === "Escape") setMobileOpen(false);
+    }
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [mobileOpen]);
+
   useScrollLock(mobileOpen);
   const mobileTrapRef = useFocusTrap(mobileOpen);
 

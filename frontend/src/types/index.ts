@@ -21,6 +21,8 @@ export interface Wine {
   featured: boolean;
   priceAgorot: number;
   stock: number;
+  createdAt: string;
+  updatedAt: string;
 }
 
 export interface CartItem {

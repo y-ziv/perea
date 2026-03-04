@@ -81,7 +81,7 @@ export function WineForm({ initialData, mode }: WineFormProps) {
       });
 
       if (!res.ok) {
-        const err = await res.json();
+        const err = await res.json().catch(() => ({}));
         throw new Error(err.error || "Save failed");
       }
 

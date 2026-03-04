@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useId } from "react";
 import { useFocusTrap } from "@/hooks/useFocusTrap";
 
 interface ConfirmDialogProps {
@@ -25,6 +25,7 @@ export function ConfirmDialog({
   loading,
 }: ConfirmDialogProps) {
   const trapRef = useFocusTrap(open);
+  const titleId = useId();
 
   useEffect(() => {
     if (!open) return;
@@ -47,10 +48,10 @@ export function ConfirmDialog({
       <div
         role="dialog"
         aria-modal="true"
-        aria-labelledby="confirm-title"
+        aria-labelledby={titleId}
         className="relative z-10 mx-4 w-full max-w-sm rounded-lg bg-primary p-6 shadow-xl"
       >
-        <h3 id="confirm-title" className="text-body font-medium text-cream">
+        <h3 id={titleId} className="text-body font-medium text-cream">
           {title}
         </h3>
         <p className="mt-2 text-caption text-cream-muted">{message}</p>

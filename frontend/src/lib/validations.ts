@@ -1,11 +1,18 @@
 import { z } from "zod";
 
+// --- Slug ---
+
+export const slugSchema = z
+  .string()
+  .min(1)
+  .regex(/^[a-z0-9]+(-[a-z0-9]+)*$/, "Slug must be lowercase alphanumeric with single hyphens");
+
 // --- Wine ---
 
 export const wineSchema = z.object({
   name: z.string().min(1),
   nameHe: z.string().optional(),
-  slug: z.string().min(1).regex(/^[a-z0-9-]+$/, "Slug must be lowercase alphanumeric with hyphens"),
+  slug: slugSchema,
   winery: z.string().min(1),
   region: z.enum(["galilee", "northern-greece"]),
   country: z.enum(["Israel", "Greece"]),
@@ -14,13 +21,16 @@ export const wineSchema = z.object({
   year: z.number().int().min(1900).max(2100).optional(),
   description: z.string().min(1),
   descriptionHe: z.string().optional(),
-  image: z.string().url().or(z.literal("")),
-  priceAgorot: z.number().int().min(0),
+  image: z.string().url("Image must be a valid URL").optional(),
+  priceAgorot: z.number().int().min(1, "Price must be at least 1 agora"),
   stock: z.number().int().min(0),
   featured: z.boolean().optional(),
 });
 
-export const wineUpdateSchema = wineSchema.partial();
+export const wineUpdateSchema = wineSchema.partial().refine(
+  (data) => Object.keys(data).length > 0,
+  { message: "At least one field is required" }
+);
 
 // --- Checkout ---
 

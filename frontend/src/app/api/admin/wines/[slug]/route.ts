@@ -3,11 +3,15 @@ import { connectDB } from "@/lib/mongodb";
 import { Wine } from "@/models/Wine";
 import { revalidatePath } from "next/cache";
 import { withAdminAuth } from "@/lib/admin-auth";
-import { wineUpdateSchema } from "@/lib/validations";
+import { slugSchema, wineUpdateSchema } from "@/lib/validations";
 
 export const GET = withAdminAuth(async (_request, { params }) => {
   try {
-    const { slug } = await params;
+    const { slug: rawSlug } = await params;
+    if (!slugSchema.safeParse(rawSlug).success) {
+      return NextResponse.json({ error: "Invalid slug" }, { status: 400 });
+    }
+    const slug = rawSlug;
     await connectDB();
     const wine = await Wine.findOne({ slug }).lean();
 
@@ -24,19 +28,16 @@ export const GET = withAdminAuth(async (_request, { params }) => {
 
 export const PUT = withAdminAuth(async (request, { params }) => {
   try {
-    const { slug } = await params;
+    const { slug: rawSlug } = await params;
+    if (!slugSchema.safeParse(rawSlug).success) {
+      return NextResponse.json({ error: "Invalid slug" }, { status: 400 });
+    }
+    const slug = rawSlug;
     const raw = await request.json();
     const parsed = wineUpdateSchema.safeParse(raw);
     if (!parsed.success) {
       return NextResponse.json(
         { error: "Validation failed", details: parsed.error.flatten().fieldErrors },
-        { status: 400 }
-      );
-    }
-
-    if (Object.keys(parsed.data).length === 0) {
-      return NextResponse.json(
-        { error: "No fields to update" },
         { status: 400 }
       );
     }
@@ -60,7 +61,11 @@ export const PUT = withAdminAuth(async (request, { params }) => {
 
 export const DELETE = withAdminAuth(async (_request, { params }) => {
   try {
-    const { slug } = await params;
+    const { slug: rawSlug } = await params;
+    if (!slugSchema.safeParse(rawSlug).success) {
+      return NextResponse.json({ error: "Invalid slug" }, { status: 400 });
+    }
+    const slug = rawSlug;
     await connectDB();
     const wine = await Wine.findOneAndDelete({ slug });
 

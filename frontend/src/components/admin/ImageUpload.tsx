@@ -33,7 +33,10 @@ export function ImageUpload({ value, onChange }: ImageUploadProps) {
         body: formData,
       });
 
-      if (!res.ok) throw new Error("Upload failed");
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({}));
+        throw new Error(err.error || "Upload failed");
+      }
 
       const data = await res.json();
       onChange(data.url);
@@ -49,13 +52,13 @@ export function ImageUpload({ value, onChange }: ImageUploadProps) {
     <div className="space-y-2">
       {value && (
         <div className="relative h-48 w-48 overflow-hidden rounded border border-warm">
-          <Image src={value} alt="Preview" fill className="object-cover" />
+          <Image src={value} alt="תצוגה מקדימה" fill sizes="192px" className="object-cover" />
         </div>
       )}
       <input
         ref={inputRef}
         type="file"
-        accept="image/*"
+        accept="image/jpeg,image/png,image/webp"
         onChange={handleUpload}
         className="hidden"
       />

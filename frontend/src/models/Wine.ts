@@ -43,6 +43,8 @@ const WineSchema = new Schema<IWine>(
   { timestamps: true }
 );
 
+WineSchema.index({ stock: 1, featured: -1, createdAt: -1 });
+
 export const Wine =
   (mongoose.models.Wine as mongoose.Model<IWine>) ||
   mongoose.model<IWine>("Wine", WineSchema);

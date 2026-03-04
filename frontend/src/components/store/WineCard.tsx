@@ -1,5 +1,6 @@
 "use client";
 
+import { memo } from "react";
 import Image from "next/image";
 import { useCart } from "@/context/CartContext";
 import { formatPrice } from "@/lib/format";
@@ -22,7 +23,7 @@ const COUNTRY_NAMES: Record<string, string> = {
   Israel: "ישראל",
 };
 
-export function WineCard(wine: WineCardProps) {
+export const WineCard = memo(function WineCard(wine: WineCardProps) {
   const { addItem } = useCart();
 
   const outOfStock = wine.stock <= 0;
@@ -81,4 +82,4 @@ export function WineCard(wine: WineCardProps) {
       )}
     </div>
   );
-}
+});

@@ -1,10 +1,6 @@
 import { NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
-
-const allowedEmails = (process.env.ADMIN_EMAILS ?? "")
-  .split(",")
-  .map((e) => e.trim().toLowerCase())
-  .filter(Boolean);
+import { getAllowedEmails } from "@/lib/allowed-emails";
 
 type RouteHandler = (
   request: Request,
@@ -18,9 +14,10 @@ export function withAdminAuth(handler: RouteHandler): RouteHandler {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    // Defense-in-depth: verify email is in the admin allowlist
+    // Fail-closed: if allowlist is empty or email is not in the list, deny access
+    const allowedEmails = getAllowedEmails();
     if (
-      allowedEmails.length > 0 &&
+      allowedEmails.length === 0 ||
       !allowedEmails.includes(session.user.email.toLowerCase())
     ) {
       return NextResponse.json({ error: "Forbidden" }, { status: 403 });

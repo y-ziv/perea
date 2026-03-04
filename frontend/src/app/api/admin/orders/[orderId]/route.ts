@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { connectDB } from "@/lib/mongodb";
 import { Order } from "@/models/Order";
+import { Wine } from "@/models/Wine";
 import { withAdminAuth } from "@/lib/admin-auth";
 import { orderIdSchema } from "@/lib/validations";
 
@@ -48,7 +49,29 @@ export const DELETE = withAdminAuth(async (_request, { params }) => {
       );
     }
 
-    await Order.findOneAndDelete({ orderId: parsed.data });
+    // Atomically delete only non-PAID orders (race-condition safe)
+    const deleted = await Order.findOneAndDelete({
+      orderId: parsed.data,
+      status: { $ne: "PAID" },
+    });
+
+    if (!deleted) {
+      return NextResponse.json(
+        { error: "Order status changed, cannot delete" },
+        { status: 409 }
+      );
+    }
+
+    // Restore stock that was reserved at checkout
+    await Promise.all(
+      deleted.items.map((item) =>
+        Wine.updateOne(
+          { slug: item.wineSlug },
+          { $inc: { stock: item.quantity } }
+        )
+      )
+    );
+
     return NextResponse.json({ success: true });
   } catch (error) {
     console.error("DELETE /api/admin/orders/[orderId]:", error);

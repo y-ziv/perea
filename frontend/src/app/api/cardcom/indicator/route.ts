@@ -12,13 +12,11 @@ function isWebhookApproved(data: Record<string, unknown>): {
   approved: boolean;
   transactionId: string;
 } {
-  // eslint-disable-next-line eqeqeq
   const topLevelOk = data.ResponseCode == 0;
   const txId = String(
     data.TranzactionId || data.tranzactionId || data.InternalDealNumber || data.internalDealNumber || ""
   );
   const txInfo = data.TranzactionInfo as Record<string, unknown> | null;
-  // eslint-disable-next-line eqeqeq
   const txInfoOk = txInfo && txInfo.ResponseCode == 0;
 
   return {
@@ -40,7 +38,11 @@ export async function POST(request: Request) {
     });
   }
 
-  console.info("Cardcom webhook data:", JSON.stringify(webhookData));
+  console.info("Cardcom webhook received:", {
+    ResponseCode: webhookData.ResponseCode,
+    LowProfileId: webhookData.LowProfileId || webhookData.LowProfileCode,
+    ReturnValue: webhookData.ReturnValue,
+  });
 
   const lowProfileCode =
     (webhookData.LowProfileId as string) ||
@@ -89,11 +91,15 @@ export async function POST(request: Request) {
         `Indicator: GetLpResult approved=${apiVerified} txId=${apiTransactionId}`
       );
     } catch (err) {
-      console.warn("Indicator: GetLpResult call failed, relying on webhook data:", err);
+      // If the API call fails entirely (network error, timeout), do NOT
+      // fall back to the unauthenticated webhook data. Fail closed.
+      // The order stays PENDING and can be manually verified in the admin panel.
+      console.warn("Indicator: GetLpResult call failed, payment NOT approved (fail-closed):", err);
     }
 
-    // Payment is approved if either source confirms it
-    const approved = webhookResult.approved || apiVerified;
+    // Payment is approved ONLY if the server-to-server API check confirms it.
+    // The webhook data alone is never trusted (endpoint is unauthenticated).
+    const approved = apiVerified;
     const transactionId = apiTransactionId || webhookResult.transactionId;
 
     if (!approved) {

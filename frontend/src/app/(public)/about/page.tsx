@@ -50,14 +50,16 @@ export default function AboutPage() {
           </div>
 
           {/* Image — left side in RTL */}
-          <div className="relative h-80 w-full overflow-hidden sm:h-[28rem] md:sticky md:top-32 md:order-2 md:h-[36rem]">
-            <Image
-              src="/images/our-story/home-1.jpg"
-              alt="פראה בית יין"
-              fill
-              className="object-cover"
-              sizes="(max-width: 768px) 100vw, 50vw"
-            />
+          <div className="h-80 w-full overflow-hidden sm:h-[28rem] md:sticky md:top-32 md:order-2 md:h-[36rem]">
+            <div className="relative h-full w-full">
+              <Image
+                src="/images/our-story/home-1.jpg"
+                alt="פראה בית יין"
+                fill
+                className="object-cover"
+                sizes="(max-width: 768px) 100vw, 50vw"
+              />
+            </div>
           </div>
         </div>
       </div>
